@@ -1,14 +1,17 @@
-# OpenAI Codex Referral & Management System (openai-codex-referral)
+# OpenAI Codex & GPT 邀请奖励全自动核销与卡密分发管理系统 (openai-codex-referral)
 
 <p align="center">
   <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
   <img src="https://img.shields.io/badge/Python-3.10%2B-brightgreen.svg" alt="Python">
   <img src="https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker" alt="Docker">
   <img src="https://img.shields.io/badge/OpenAI-Codex%20Desktop-412991.svg" alt="Codex">
+  <img src="https://img.shields.io/badge/GPT-Referral%20Rewards-orange.svg" alt="GPT Referral">
 </p>
 
-一套专为 OpenAI 推荐朋友邀请奖励（Credits）设计的全自动化核销与卡密分发管理系统。
-系统深度逆向并模拟了官方 **Codex Desktop** 桌面客户端的 OAuth 2.0 PKCE 认证握手与原生 Rust 引擎推理流程，无缝串联 Cloudflare Worker 临时邮箱自动收信取码、智能风控探测与卡密分发体系，实现端到端 100% 全自动化核销入账。
+> 🏷️ **关键词 (Keywords)**: `GPT 邀请奖励` | `Codex 邀请奖励` | `OpenAI 邀请奖励` | `OpenAI 推荐朋友` | `Codex 邀请` | `GPT 邀请` | `ChatGPT Referral` | `OpenAI Credits` | `卡密分发核销` | `全自动接码核销`
+
+一套专为 **GPT / OpenAI Codex 推荐朋友邀请奖励（Credits / 额度返利）** 设计的高性能全自动化核销与卡密分发管理系统。
+系统深度逆向并模拟了官方 **Codex Desktop** 桌面客户端的 OAuth 2.0 PKCE 认证握手与原生 Rust 引擎推理流程，无缝串联 Cloudflare Worker 临时邮箱自动收信取码、智能风控探测与卡密分发体系，彻底解决 GPT / Codex 邀请奖励无法到账、桌面端手工核销繁杂的痛点，实现端到端 100% 全自动化核销入账。
 
 ---
 
