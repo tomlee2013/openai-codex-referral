@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codex 好友邀请核销助手 - 专属 Credits 官方全自动核销工作台</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2338bdf8'><path d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'/></svg>" type="image/svg+xml">
+  <style>
+    /* ============================================================
+       Codex 现代化 Cyber Obsidian 极光电光青主题视觉规范
+       ============================================================ */
+    :root {
+      --cyan-100: #e0f2fe;
+      --cyan-300: #38bdf8;
+      --cyan-500: #0ea5e9;
+      --cyan-border: rgba(56, 189, 248, 0.38);
+      --cyan-border-subtle: rgba(56, 189, 248, 0.18);
+      
+      --slate-deep: #070a13;
+      --slate-card: rgba(13, 20, 38, 0.88);
+      --slate-head: linear-gradient(135deg, #0b152d 0%, #112652 55%, #0b152d 100%);
+      --cyan-glow: rgba(14, 165, 233, 0.3);
+
+      /* 别名映射保持全站通用性 */
+      --gold-100: var(--cyan-100);
+      --gold-300: var(--cyan-300);
+      --gold-500: var(--cyan-500);
+      --gold-primary: var(--cyan-500);
+      --gold-border: var(--cyan-border);
+      --gold-border-subtle: var(--cyan-border-subtle);
+      --purple-deep: var(--slate-deep);
+      --purple-card: var(--slate-card);
+      --purple-head: var(--slate-head);
+      --purple-glow: var(--cyan-glow);
+      
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-gold: var(--cyan-300);
+      
+      --emerald-glow: #10b981;
+      --terminal-bg: #060a12;
+      --shadow-card: 0 32px 85px rgba(2, 6, 16, 0.65), 0 0 0 1px rgba(56, 189, 248, 0.18);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      min-height: 100%;
+      overflow-y: scroll;
+      scrollbar-gutter: stable;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(56, 189, 248, 0.35) rgba(5, 9, 20, 0.6);
+    }
+
+    body {
+      min-height: 100dvh;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at 14% -8%, rgba(14, 165, 233, 0.22), transparent 36%),
+        radial-gradient(circle at 86% 7%, rgba(16, 185, 129, 0.18), transparent 32%),
+        radial-gradient(circle at 50% 108%, rgba(2, 132, 199, 0.18), transparent 38%),
+        linear-gradient(135deg, #070a12 0%, #0d1527 48%, #070a13 100%);
+      background-attachment: fixed;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* 极光环境柔光球 */
+    .ambient {
+      z-index: -1;
+      filter: blur(100px);
+      opacity: 0.22;
+      pointer-events: none;
+      border-radius: 999px;
+      position: fixed;
+    }
+    .ambient-one { background: #0ea5e9; width: 440px; height: 440px; top: -160px; left: 2vw; }
+    .ambient-two { background: #10b981; width: 380px; height: 380px; bottom: -140px; right: 2vw; }
+
+    /* 外层主容器 */
+    .shell {
+      width: min(1320px, calc(100% - 48px));
+      min-height: 100dvh;
+      margin: 0 auto;
+      padding: 30px 0 50px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      position: relative;
+    }
+
+    /* 顶部 Hero 区域 */
+    .hero {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0 4px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      background: rgba(14, 165, 233, 0.12);
+      color: #7dd3fc;
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      box-shadow: 0 4px 14px rgba(2, 6, 16, 0.25);
+    }
+    .hero-eyebrow span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    .brand-title {
+      font-size: clamp(34px, 4.4vw, 48px);
+      font-weight: 950;
+      letter-spacing: -0.05em;
+      line-height: 1.1;
+      color: #38bdf8;
+      background: linear-gradient(180deg, #ffffff 0%, #bae6fd 48%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 4px 14px rgba(2, 6, 16, 0.5));
+    }
+
+    .hero-subline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hero-subline p {
+      color: #cbd5e1;
+      font-size: 14.5px;
+      font-weight: 500;
+    }
+    .guide-btn {
+      padding: 5px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--cyan-border);
+      border-radius: 999px;
+      color: #e0f2fe;
+      background: rgba(14, 165, 233, 0.16);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+    .guide-btn:hover {
+      background: rgba(14, 165, 233, 0.3);
+      border-color: #38bdf8;
+      transform: translateY(-1px);
+    }
+
+    /* 信任标签栏 (trust-strip) */
+    .trust-strip {
+      border: 1px solid var(--cyan-border-subtle);
+      background: rgba(13, 20, 36, 0.7);
+      backdrop-filter: blur(14px);
+      border-radius: 999px;
+      padding: 8px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      font-size: 12px;
+      color: #cbd5e1;
+      flex-wrap: wrap;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    }
+    .trust-strip span {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .trust-strip i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #0ea5e9;
+      display: inline-block;
+      box-shadow: 0 0 6px #0ea5e9;
+    }
+
+    /* 主卡片架构 (.flow-card) */
+    .flow-card {
+      background: var(--slate-card);
+      border: 1px solid var(--cyan-border);
+      border-radius: 26px;
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(20px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 卡片头部切换栏 */
+    .card-head {
+      padding: 16px 26px;
+      background: var(--slate-head);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: nowrap;
+    }
+
+    .tab-pills {
+      display: flex;
+      gap: 8px;
+    }
+    .tab-btn {
+      padding: 7px 15px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #94a3b8;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .tab-btn.active {
+      background: rgba(14, 165, 233, 0.18);
+      border-color: var(--cyan-border);
+      color: #f0f9ff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+    .tab-btn:hover:not(.active) {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .system-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11.5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      color: #cbd5e1;
+      background: rgba(8, 13, 24, 0.6);
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .system-pill strong { color: #38bdf8; }
+
+    /* 实时在线状态呼吸点与指标样式 */
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: livePulse 2s infinite;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    @keyframes livePulse {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+      }
+    }
+
+    /* 实时核销播报条 (Live Ticker) */
+    .live-ticker-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(90deg, rgba(14, 165, 233, 0.09) 0%, rgba(16, 185, 129, 0.06) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-radius: 12px;
+      padding: 7px 12px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      min-width: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .ticker-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(56, 189, 248, 0.18);
+      color: #38bdf8;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      white-space: nowrap;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      flex-shrink: 0;
+    }
+    .ticker-content {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      color: #cbd5e1;
+      min-height: 22px;
+      display: flex;
+      align-items: center;
+    }
+    .ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      width: 100%;
+      min-width: 0;
+      animation: tickerFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11.5px;
+      white-space: nowrap;
+    }
+    @keyframes tickerFadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .ticker-time { color: #94a3b8; font-size: 11px; flex-shrink: 0; }
+    .ticker-sep { color: #475569; flex-shrink: 0; }
+    .ticker-card { color: var(--gold-300); font-weight: 700; flex-shrink: 0; }
+    .ticker-email {
+      color: #93c5fd;
+      flex-shrink: 1;
+      min-width: 40px;
+      max-width: 155px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .ticker-tag {
+      background: rgba(16, 185, 129, 0.18);
+      color: #34d399;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 750;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.15);
+    }
+
+    /* 卡片主体网格 (非对称舒适排版：左侧表单 1fr，右侧监控链路 1.25fr) */
+    .card-body {
+      padding: 28px 32px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 980px) {
+      .card-body { grid-template-columns: 1fr; padding: 22px; gap: 24px; }
+    }
+
+    /* 左侧输入配置容器 (严格防抖动约束) */
+    .form-panel {
+      min-width: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 表单与输入卡片 */
+    .step-card-box {
+      background: rgba(10, 16, 30, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .step-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .step-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(14, 165, 233, 0.18);
+      color: #38bdf8;
+      border: 1px solid #0284c7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #f0f9ff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #cbd5e1;
+    }
+    .label-actions {
+      display: flex;
+      gap: 10px;
+      font-size: 11px;
+    }
+    .label-btn {
+      color: #38bdf8;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      transition: color 0.15s;
+    }
+    .label-btn:hover { color: #fff; }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      background: rgba(7, 11, 22, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 13px;
+      padding: 10px 13px;
+      color: #fff;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    textarea:focus, input[type="text"]:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.25);
+    }
+
+    /* 彻底清除与覆盖浏览器原生自动填充、密码查看与黄色/浅色高亮 */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active,
+    textarea:-webkit-autofill,
+    textarea:-webkit-autofill:hover,
+    textarea:-webkit-autofill:focus,
+    textarea:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 1000px rgba(7, 11, 22, 0.98) inset !important;
+      -webkit-text-fill-color: #fff !important;
+      caret-color: #38bdf8 !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
+    /* 隐藏 Edge/IE 浏览器的默认密码查看小眼睛与清除叉叉提示 */
+    input::-ms-reveal,
+    input::-ms-clear {
+      display: none !important;
+    }
+
+    /* 隐藏现代浏览器额外的联系人、凭据与密码自动填充下拉/图标 */
+    input::-webkit-contacts-auto-fill-button,
+    input::-webkit-credentials-auto-fill-button {
+      visibility: hidden !important;
+      display: none !important;
+      pointer-events: none !important;
+      height: 0 !important;
+      width: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* JWT 快速解析徽章 */
+    .jwt-preview {
+      margin-top: 8px;
+      padding: 10px 14px;
+      background: rgba(9, 14, 28, 0.9);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 11px;
+      font-size: 11px;
+      font-family: ui-monospace, monospace;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .jwt-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .jwt-badge {
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      background: rgba(14, 165, 233, 0.18);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    /* 主动作大按钮 (电光青蓝渐变) */
+    .btn-submit {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 50%, #38bdf8 100%);
+      color: #ffffff;
+      font-size: 14.5px;
+      font-weight: 850;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      box-shadow: 0 10px 28px rgba(14, 165, 233, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      transition: transform 0.18s, box-shadow 0.18s, filter 0.18s;
+      margin-top: 10px;
+    }
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(14, 165, 233, 0.48);
+      filter: brightness(1.08);
+    }
+    .btn-submit:active:not(:disabled) {
+      transform: translateY(0);
+    }
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      filter: grayscale(0.5);
+    }
+
+    .btn-stop {
+      width: 100%;
+      margin-top: 8px;
+      padding: 9px 16px;
+      border-radius: 11px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      font-size: 12px;
+      font-weight: 750;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .btn-stop:hover {
+      background: rgba(239, 68, 68, 0.3);
+      border-color: #fca5a5;
+    }
+
+    /* 右侧面板：步骤可视化 + 终端 (严格防抖动约束) */
+    .dashboard-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0;
+      width: 100%;
+    }
+
+    /* 7 步细致进度栏 (固定列宽 minmax 零挤压) */
+    .steps-timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+      width: 100%;
+    }
+    .step-item {
+      padding: 9px 10px;
+      border-radius: 12px;
+      background: rgba(9, 14, 26, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0;
+      box-sizing: border-box;
+      transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .step-item.core {
+      grid-column: span 2;
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+    .step-tag {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .step-title {
+      font-size: 11px;
+      font-weight: 750;
+      color: #cbd5e1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .step-item.active {
+      background: rgba(14, 165, 233, 0.2);
+      border-color: #38bdf8;
+      box-shadow: 0 0 16px rgba(14, 165, 233, 0.25);
+    }
+    .step-item.active .step-title { color: #fff; }
+    .step-item.active .step-tag { color: #38bdf8; }
+
+    .step-item.completed {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.5);
+    }
+    .step-item.completed .step-title { color: #a7f3d0; }
+    .step-item.completed .step-tag { color: #34d399; }
+
+    .step-item.warning {
+      background: rgba(251, 191, 36, 0.14);
+      border-color: rgba(251, 191, 36, 0.6);
+    }
+    .step-item.warning .step-title { color: #fef08a; }
+    .step-item.warning .step-tag { color: #fbbf24; }
+
+    .step-item.failed {
+      background: rgba(239, 68, 68, 0.14);
+      border-color: rgba(239, 68, 68, 0.6);
+    }
+    .step-item.failed .step-title { color: #fca5a5; }
+    .step-item.failed .step-tag { color: #f87171; }
+
+    /* 到账成功高光横幅 */
+    .success-banner {
+      display: none;
+      padding: 16px 20px;
+      border-radius: 16px;
+      border: 1px solid rgba(16, 185, 129, 0.7);
+      background: linear-gradient(135deg, rgba(11, 28, 52, 0.95) 0%, rgba(6, 44, 38, 0.95) 100%);
+      box-shadow: 0 12px 35px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      animation: bannerSlide 0.4s ease-out;
+    }
+    @keyframes bannerSlide {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .banner-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: #e0f2fe;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .banner-desc {
+      font-size: 12px;
+      color: #d1fae5;
+      margin-top: 4px;
+      line-height: 1.5;
+    }
+
+    /* 仿 macOS 曜石流式终端 (宽敞舒适 + 呼吸感设计 + 严格防抖动约束) */
+    .terminal-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border-radius: 18px;
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      background: rgba(6, 11, 24, 0.95);
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.06);
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .terminal-bar {
+      padding: 12px 20px;
+      background: rgba(11, 18, 36, 0.98);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .terminal-dots {
+      display: flex;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+    .terminal-dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dot-red { background: #ff5f56; box-shadow: 0 0 6px rgba(255, 95, 86, 0.4); }
+    .dot-yellow { background: #ffbd2e; box-shadow: 0 0 6px rgba(255, 189, 46, 0.4); }
+    .dot-green { background: #27c93f; box-shadow: 0 0 6px rgba(39, 201, 63, 0.4); }
+
+    .terminal-meta {
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      flex-shrink: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .terminal-tools {
+      display: flex;
+      gap: 12px;
+      font-size: 11.5px;
+      align-items: center;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .term-btn {
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11.5px;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .term-btn:hover { color: #fff; background: rgba(56, 189, 248, 0.18); border-color: rgba(56, 189, 248, 0.3); }
+
+    .terminal-view {
+      padding: 18px 22px;
+      min-height: 400px;
+      height: 430px;
+      max-height: 520px;
+      overflow-y: scroll;
+      scrollbar-gutter: stable;
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      letter-spacing: 0.2px;
+      color: #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(56, 189, 248, 0.35) rgba(5, 9, 20, 0.6);
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+    /* 终端专属科技暗黑定制滚动条 */
+    .terminal-view::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .terminal-view::-webkit-scrollbar-track {
+      background: rgba(4, 8, 18, 0.5);
+      border-radius: 999px;
+      margin: 6px 0;
+    }
+    .terminal-view::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.25);
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.12);
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .terminal-view::-webkit-scrollbar-thumb:hover {
+      background: rgba(56, 189, 248, 0.65);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.45);
+    }
+    .terminal-view::-webkit-scrollbar-thumb:active {
+      background: #38bdf8;
+    }
+
+    /* 全局自定义暗黑纤细滚动条 */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(4, 7, 16, 0.3);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(56, 189, 248, 0.45);
+    }
+
+    .log-line {
+      word-break: break-all;
+      padding: 1.5px 0;
+    }
+    .log-info { color: #cbd5e1; }
+    .log-success { color: #4ade80; font-weight: 700; }
+    .log-warning { color: #fbbf24; }
+    .log-error { color: #f87171; font-weight: 700; }
+    .log-highlight { color: #38bdf8; font-weight: 750; }
+    .log-system { color: #64748b; font-style: italic; }
+
+    /* 弹窗对话框 (Guide Dialog) */
+    dialog.modal-dialog {
+      border: 1px solid var(--cyan-border);
+      border-radius: 24px;
+      background: rgba(11, 18, 33, 0.98);
+      color: var(--text-main);
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(25px);
+      max-width: 680px;
+      width: calc(100% - 32px);
+      margin: auto;
+      padding: 0;
+      overflow: hidden;
+    }
+    dialog::backdrop {
+      background: rgba(4, 7, 14, 0.8);
+      backdrop-filter: blur(8px);
+    }
+    .dialog-inner {
+      padding: 26px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .dialog-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+      padding-bottom: 16px;
+    }
+    .dialog-close {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .dialog-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .dialog-step-card {
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: rgba(8, 13, 26, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #38bdf8, #0284c7);
+      color: #ffffff;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    /* 追踪列表表格 */
+    .tracking-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+      margin-top: 10px;
+    }
+    .tracking-table th {
+      padding: 9px 12px;
+      text-align: left;
+      font-weight: 750;
+      color: #38bdf8;
+      background: rgba(11, 18, 33, 0.9);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+    }
+    .tracking-table td {
+      padding: 9px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      color: #e2e8f0;
+      font-family: ui-monospace, monospace;
+    }
+
+    /* 底部版权 */
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+      padding-top: 10px;
+    }
+
+    /* ==================== 统一现代化弹窗与 Toast 通知体系 ==================== */
+    #toast-container {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 440px;
+      pointer-events: none;
+    }
+    .toast-item {
+      pointer-events: auto;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 13px 18px;
+      border-radius: 14px;
+      background: rgba(11, 18, 33, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), 0 0 18px rgba(14, 165, 233, 0.15);
+      color: #fff;
+      font-size: 13.5px;
+      line-height: 1.5;
+      animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .toast-item.toast-success {
+      border-color: rgba(52, 211, 153, 0.5);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.55), 0 0 18px rgba(52, 211, 153, 0.18);
+    }
+    .toast-item.toast-error {
+      border-color: rgba(239, 68, 68, 0.5);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.55), 0 0 18px rgba(239, 68, 68, 0.18);
+    }
+    .toast-item.toast-warning {
+      border-color: rgba(245, 158, 11, 0.5);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.55), 0 0 18px rgba(245, 158, 11, 0.18);
+    }
+    .toast-item.toast-out {
+      opacity: 0;
+      transform: translateX(40px) scale(0.95);
+    }
+    .toast-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .toast-content {
+      flex: 1;
+      word-break: break-word;
+      white-space: pre-wrap;
+      color: #f1f5f9;
+    }
+    .toast-close {
+      color: rgba(255, 255, 255, 0.45);
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      margin-left: 6px;
+      transition: color 0.15s;
+    }
+    .toast-close:hover {
+      color: #fff;
+    }
+    @keyframes toastSlideIn {
+      from { opacity: 0; transform: translateX(50px) scale(0.93); }
+      to { opacity: 1; transform: translateX(0) scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 背景柔光球 -->
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+
+  <main class="shell">
+
+    <!-- 顶部 Hero 区域 -->
+    <header class="hero">
+      <div class="hero-eyebrow">
+        <span class="dot"></span>
+        <span>CODEX DESKTOP REFERRAL ENGINE · WSL2 LINUX</span>
+      </div>
+
+      <h1 class="brand-title">Codex 好友邀请核销助手</h1>
+
+      <div class="hero-subline">
+        <p>驱动官方无头引擎直发 codex_turn 首会话 · 实时核销专属 Credits 奖励 (250 / 500 / 1000 等)</p>
+        <button class="guide-btn" onclick="openGuideModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          <span>操作指南与资格说明</span>
+        </button>
+      </div>
+
+      <!-- 信任标签条 -->
+      <section class="trust-strip">
+        <span><i></i>官方 Linux 原生引擎</span>
+        <span><i></i>真实 WebSocket 会话</span>
+        <span><i></i>自动变更为 REDEEMED</span>
+        <span><i></i>沙箱运行零污染</span>
+      </section>
+    </header>
+
+    <!-- 主工作卡片 -->
+    <section class="flow-card">
+
+      <!-- 顶部控制条 -->
+      <header class="card-head">
+        <div class="tab-pills">
+          <button id="tab-btn-card" class="tab-btn active" onclick="switchMainTab('card')">🎟️ 卡密兑换核销 (推荐)</button>
+          <!-- DEV_ONLY_START -->
+          <button id="tab-btn-token" class="tab-btn" onclick="switchMainTab('token')">🛠️ 开发者 Token 模式</button>
+          <!-- DEV_ONLY_END -->
+          <button id="tab-btn-tracking" class="tab-btn" onclick="switchMainTab('tracking')">🔍 卡密进度查询</button>
+        </div>
+
+        <div class="system-pill">
+          <span style="display:inline-flex;align-items:center;gap:6px;">
+            <span class="live-dot"></span>
+            <span>在线: <strong id="stat-online-num" style="color:#34d399;">--</strong> 人</span>
+          </span>
+          <span style="color:rgba(255,255,255,0.2);">·</span>
+          <span>执行中: <strong id="stat-active-num" style="color:#fbbf24;">--</strong> 单</span>
+          <span style="color:rgba(255,255,255,0.2);">·</span>
+          <span>近2h完成: <strong id="stat-2h-num" style="color:#38bdf8;">--</strong> 笔</span>
+        </div>
+      </header>
+
+      <!-- DEV_ONLY_START -->
+      <!-- 开发者子控制条 (仅在切换至开发者 Token 模式时呈现) -->
+      <div id="dev-subnav" style="display:none;padding:12px 28px;gap:12px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(10,16,30,0.5);">
+        <span style="font-size:12px;color:#94a3b8;font-weight:700;">🛠️ 开发者工具：</span>
+        <div class="tab-pills">
+          <button id="dev-subtab-act" class="tab-btn active" style="padding:5px 14px;font-size:12px;" onclick="switchDevSubTab('act')">🚀 凭证自动核销 (首会话)</button>
+          <button id="dev-subtab-track" class="tab-btn" style="padding:5px 14px;font-size:12px;" onclick="switchDevSubTab('track')">🔍 官方 Token 追踪 (邀请明细)</button>
+        </div>
+      </div>
+      <!-- DEV_ONLY_END -->
+
+      <!-- 视图 1: 核心激活与日志面板 -->
+      <div id="view-activate" class="card-body">
+
+        <!-- 左侧输入配置 -->
+        <div class="form-panel">
+          <!-- 卡密模式面板 (默认推荐) -->
+          <div id="panel-card-flow">
+            <div class="section-title">
+              <span>🎟️ 卡密兑换与自动激活流程</span>
+            </div>
+
+            <!-- 实时全自动核销动态轮播条 -->
+            <div class="live-ticker-bar">
+              <span class="ticker-badge">🔔 实时动态</span>
+              <div class="ticker-content" id="live-ticker-wrap">
+                <div class="ticker-item">
+                  <span class="ticker-time">同步中</span>
+                  <span class="ticker-sep">·</span>
+                  <span class="ticker-card" style="color:#94a3b8;">正在连接实时数据流...</span>
+                  <span class="ticker-tag" style="background:rgba(56,189,248,0.15);color:#38bdf8;border-color:rgba(56,189,248,0.3);box-shadow:none;">⚡ 实时监听</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 步骤 1: 卡密兑换 -->
+            <div class="step-card-box">
+              <div class="step-card-header">
+                <span class="step-badge">1</span>
+                <div>
+                  <h4 style="color:var(--gold-text);font-size:13.5px;margin-bottom:2px;">输入卡密兑换被邀请邮箱</h4>
+                  <p style="font-size:12px;color:#94a3b8;">使用卡密锁定一个系统分配的被邀请邮箱账号</p>
+                </div>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:14px;">
+                <input type="text" id="ipt-card-key" name="cdx_card_key_input" class="input-text" placeholder="输入卡密 CDX-XXXX-XXXX-XXXX..."
+                  autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                  data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other" aria-autocomplete="none"
+                  style="flex:1;text-transform:uppercase;font-family:'JetBrains Mono',monospace;font-size:13.5px;"
+                  onkeydown="if(event.key==='Enter')redeemCardKey()">
+                <button class="btn-submit" style="width:auto;padding:0 20px;height:42px;font-size:13.5px;margin-top:0;" onclick="redeemCardKey()">立即兑换</button>
+              </div>
+              <div id="redeem-msg" style="margin-top:10px;font-size:12.5px;display:none;"></div>
+            </div>
+
+            <!-- 步骤 2: 客户端发起邀请 (兑换成功后展示) -->
+            <div id="step-invite-box" class="step-card-box" style="display:none;background:rgba(14,165,233,0.06);border:1px solid rgba(56,189,248,0.35);">
+              <div class="step-card-header">
+                <span class="step-badge" style="background:#0ea5e9;color:#ffffff;">2</span>
+                <div>
+                  <h4 style="color:var(--gold-text);font-size:13.5px;margin-bottom:2px;">在 GPT 桌面客户端发送邀请</h4>
+                  <p style="font-size:12px;color:#cbd5e1;">打开官方客户端 -> 设置 -> 推荐朋友 -> 粘贴该邮箱发起邀请</p>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(9,14,28,0.85);padding:12px 16px;border-radius:12px;margin-top:12px;border:1px dashed var(--gold-border);flex-wrap:wrap;gap:10px;">
+                <div>
+                  <span style="font-size:11px;color:#94a3b8;display:block;">已锁定被邀请邮箱:</span>
+                  <span id="allocated-email-text" style="font-size:15px;font-weight:800;color:var(--gold-300);font-family:'JetBrains Mono',monospace;">--</span>
+                </div>
+                <button class="label-btn" style="padding:6px 14px;background:rgba(14,165,233,0.18);color:#e0f2fe;border:1px solid rgba(56,189,248,0.4);border-radius:8px;text-decoration:none;" onclick="copyAllocatedEmail()">📋 一键复制邮箱</button>
+              </div>
+            </div>
+
+            <!-- 步骤 3: 启动全自动核销 -->
+            <div id="step-action-box" class="step-card-box" style="display:none;">
+              <div class="step-card-header">
+                <span class="step-badge">3</span>
+                <div>
+                  <h4 style="color:var(--gold-text);font-size:13.5px;margin-bottom:2px;">启动官方客户端授权与核销</h4>
+                  <p style="font-size:12px;color:#94a3b8;">系统将自动收码换取桌面授权 Token 并驱动引擎核销</p>
+                </div>
+              </div>
+              <button id="btn-card-start" class="btn-submit" style="margin-top:14px;" onclick="startCardActivation()">
+                <span id="btn-card-icon">🚀</span>
+                <span id="btn-card-text">我已在客户端发送邀请，立即激活</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- DEV_ONLY_START -->
+          <!-- 开发者 Token 模式面板 (默认隐藏) -->
+          <div id="panel-token-flow" style="display:none;">
+            <div class="section-title">
+              <span>📋 开发者自定义 Token 模式</span>
+            </div>
+
+            <!-- 被邀请人凭证 -->
+            <div class="form-group">
+              <div class="form-label">
+                <span>被邀请人 Token (Invitee Access Token) <span style="color:#ff7b92;">*</span></span>
+                <div class="label-actions">
+                  <button class="label-btn" onclick="pasteClipboard('ipt-token')">📋 粘贴</button>
+                  <button class="label-btn" onclick="clearInput('ipt-token')">🧹 清空</button>
+                </div>
+              </div>
+              <textarea id="ipt-token" rows="4" placeholder="在此粘贴被邀请账号的 Bearer Token (eyJhbGci...) 或 auth.json 文本..."
+                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other"
+                oninput="parseTokenInput()"></textarea>
+
+              <!-- JWT 动态预览 -->
+              <div id="jwt-card" class="jwt-preview" style="display:none; flex-direction:column; gap:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                  <div class="jwt-row" style="margin:0;">
+                    <span style="color:#94a3b8;">方案:</span>
+                    <span id="jwt-plan" class="jwt-badge">FREE</span>
+                  </div>
+                  <div id="jwt-token-type" class="jwt-badge" style="background:rgba(239,68,68,0.2);color:#fca5a5;border:1px solid rgba(239,68,68,0.4);">
+                    ⚠️ 网页端 Token (无法触发核销)
+                  </div>
+                </div>
+                <div class="jwt-row">
+                  <span style="color:#64748b;">邮箱:</span>
+                  <span id="jwt-email" style="color:var(--gold-300);font-weight:700;">--</span>
+                </div>
+                <div class="jwt-row">
+                  <span style="color:#64748b;">Account ID:</span>
+                  <span id="jwt-acc" style="color:#cbd5e1;">--</span>
+                </div>
+                <div id="jwt-warn-box" style="display:none; font-size:11.5px; color:#fca5a5; background:rgba(239,68,68,0.12); padding:8px 12px; border-radius:8px; border:1px solid rgba(239,68,68,0.3); line-height:1.5;">
+                  ⚠️ <b>凭证类型注意</b>：当前输入的是网页端 Session Token（缺少客户端专属授权 client_id 与 offline_access 权限）。OpenAI 激励核销系统判定该请求未通过官方客户端发起，状态将保持 PENDING。请使用官方桌面客户端授权生成的 Token (或 auth.json)！
+                </div>
+              </div>
+            </div>
+
+            <!-- 启动大按钮 -->
+            <button id="btn-start" class="btn-submit" onclick="startActivation()">
+              <span id="btn-icon">🚀</span>
+              <span id="btn-text">立即执行全自动激活核销</span>
+            </button>
+          </div>
+          <!-- DEV_ONLY_END -->
+
+          <!-- 代理配置已转入服务端静默处理，前端对用户隐藏 -->
+          <input type="hidden" id="ipt-proxy" value="">
+
+          <button id="btn-stop" class="btn-stop" onclick="stopTask()">
+            <span>🛑</span>
+            <span>终止当前执行任务</span>
+          </button>
+        </div>
+
+        <!-- 右侧状态看板与终端 -->
+        <div class="dashboard-panel">
+          <div class="section-title">
+            <span>📊 执行进度与实时链路</span>
+            <span id="task-badge" style="font-size:11px;color:#94a3b8;font-weight:600;">等待就绪</span>
+          </div>
+
+          <!-- 7 步细致状态卡片 -->
+          <div class="steps-timeline">
+            <div id="step-1" class="step-item">
+              <div class="step-tag"><span>STEP 1</span><span id="s-icon-1">⚪</span></div>
+              <div class="step-title">身份握手</div>
+            </div>
+            <div id="step-2" class="step-item">
+              <div class="step-tag"><span>STEP 2</span><span id="s-icon-2">⚪</span></div>
+              <div class="step-title">MCP 运行时</div>
+            </div>
+            <div id="step-3" class="step-item">
+              <div class="step-tag"><span>STEP 3</span><span id="s-icon-3">⚪</span></div>
+              <div class="step-title">活跃心跳</div>
+            </div>
+            <div id="step-4" class="step-item">
+              <div class="step-tag"><span>STEP 4</span><span id="s-icon-4">⚪</span></div>
+              <div class="step-title">资格探测</div>
+            </div>
+            <div id="step-5" class="step-item core">
+              <div class="step-tag"><span style="color:var(--gold-300);">STEP 5 【核心核销】</span><span id="s-icon-5">⚪</span></div>
+              <div class="step-title" style="font-weight:800;color:#fff;">官方首会话 (触发专属 Credits 奖励)</div>
+            </div>
+            <div id="step-6" class="step-item">
+              <div class="step-tag"><span>STEP 6</span><span id="s-icon-6">⚪</span></div>
+              <div class="step-title">Webview 对话</div>
+            </div>
+            <div id="step-7" class="step-item">
+              <div class="step-tag"><span>STEP 7</span><span id="s-icon-7">⚪</span></div>
+              <div class="step-title">配额与追踪</div>
+            </div>
+          </div>
+
+          <!-- 成功到账高光横幅 -->
+          <div id="banner-redeemed" class="success-banner">
+            <div class="banner-title">
+              <span>🎉</span>
+              <span>邀请奖励 Credits 核销成功！</span>
+            </div>
+            <div class="banner-desc">
+              OpenAI 服务端已确认完成官方 Codex Turn 首会话，邀请状态变更为 <strong style="color:#fff;text-decoration:underline;">REDEEMED</strong>。专属奖励额度已发放至您的邀请人账户。
+            </div>
+          </div>
+
+          <!-- 未到账警告横幅 -->
+          <div id="banner-pending" class="warning-banner" style="display:none;padding:16px 20px;border-radius:16px;border:1px solid rgba(245,158,11,0.5);background:rgba(25,18,8,0.92);box-shadow:0 8px 25px rgba(245,158,11,0.2);animation:bannerSlide 0.4s ease-out;">
+            <div style="font-size:14.5px;font-weight:900;color:#fef08a;display:flex;align-items:center;gap:8px;">
+              <span>⚠️</span>
+              <span>核销未到账：OpenAI 服务端状态仍为 PENDING</span>
+            </div>
+            <div style="font-size:12px;color:#fde68a;margin-top:5px;line-height:1.6;">
+              桌面端会话链路已正常分发，但 OpenAI 服务端返回状态依然是 <strong>PENDING</strong>（专属 Credits 尚未点亮）。<br>
+              <strong>可能原因排查：</strong><br>
+              1. <strong>尚未接受专属邀请链接</strong>：该账号必须在浏览器登录状态下打开邀请邮件中的专属链接（<code>accept-referral</code>）确认接受，否则服务端无法将该账号绑定至该邀请记录；<br>
+              2. <strong>非新人首轮会话</strong>：OpenAI 规则要求该账号必须未曾在 Codex Desktop 发起过历史会话。
+            </div>
+          </div>
+
+          <!-- 黑曜石流式终端 -->
+          <div class="terminal-wrapper">
+            <div class="terminal-bar">
+              <div style="display:flex;align-items:center;gap:12px;min-width:0;">
+                <div class="terminal-dots">
+                  <div class="terminal-dot dot-red"></div>
+                  <div class="terminal-dot dot-yellow"></div>
+                  <div class="terminal-dot dot-green"></div>
+                </div>
+                <div class="terminal-meta">Codex Desktop Engine (Live Stream)</div>
+              </div>
+              <div class="terminal-tools">
+                <label style="cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;">
+                  <input type="checkbox" id="chk-scroll" checked> <span>滚屏</span>
+                </label>
+                <button class="term-btn" onclick="copyLogs()">📋 复制</button>
+                <button class="term-btn" onclick="clearLogs()">🧹 清屏</button>
+              </div>
+            </div>
+            <div id="term-view" class="terminal-view">
+              <div class="log-line log-system">// 系统就绪。在左侧填入被邀请账号 Token 后点击“立即执行全自动激活核销”。</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 视图 2: 卡密 / 邮箱核销进度查询面板 (面向普通买家) -->
+      <div id="view-tracking" class="card-body" style="display:none;grid-template-columns:1fr;">
+        <div style="max-width:860px;margin:0 auto;width:100%;">
+          
+          <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(56,189,248,0.2);padding-bottom:12px;margin-bottom:18px;flex-wrap:wrap;gap:10px;">
+            <div class="section-title" style="margin:0;">
+              <span>🎟️ 卡密核销进度实时查询</span>
+            </div>
+            <a href="javascript:void(0)" onclick="openGuideModal()" style="font-size:12px;color:var(--gold-300);text-decoration:none;">💡 如何在官方客户端直接查看？</a>
+          </div>
+
+          <!-- 卡密 / 邮箱进度查询 (无需 Token) -->
+          <div id="track-panel-card">
+            <p style="font-size:12px;color:#94a3b8;margin-bottom:14px;line-height:1.6;">
+              无需登录或提取 Token！直接输入您的<strong>卡密 (CDK)</strong> 或<strong>分配的被邀请邮箱</strong>，即可实时查询当前卡密的核销状态、关联小号与完成时间。
+            </p>
+
+            <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+              <input type="text" id="ipt-card-query" name="cdx_card_query_input" placeholder="输入卡密 CDX-XXXX-XXXX-XXXX 或 被邀请邮箱..."
+                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other" aria-autocomplete="none"
+                style="flex:1;min-width:260px;text-transform:uppercase;font-family:'JetBrains Mono',monospace;font-size:13.5px;" onkeydown="if(event.key==='Enter')queryCardProgressNow()">
+              <button class="btn-submit" style="width:auto;min-height:auto;padding:9px 24px;font-size:13px;margin:0;" onclick="queryCardProgressNow()">🔍 查询进度</button>
+            </div>
+
+            <!-- 卡密进度查询结果卡片容器 -->
+            <div id="card-progress-result-box">
+              <div style="text-align:center;padding:36px;color:#64748b;font-size:12.5px;background:rgba(11,18,33,0.5);border-radius:14px;border:1px dashed rgba(255,255,255,0.08);">
+                请输入卡密（CDK）或分配的邮箱后点击“查询进度”
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- DEV_ONLY_START -->
+      <!-- 视图 3: 开发者官方 Token 邀请明细追踪面板 (归属开发者 Token 模式) -->
+      <div id="view-dev-track" class="card-body" style="display:none;grid-template-columns:1fr;">
+        <div style="max-width:860px;margin:0 auto;width:100%;">
+          
+          <div class="section-title">
+            <span>🔍 官方实时邀请列表查询 (GET /referrals/invite/tracking)</span>
+            <button id="btn-load-local-track" class="label-btn" onclick="loadLocalInviterTrack()" style="display:none;">⚡ 自动载入本机 Plus 凭证</button>
+          </div>
+          <p style="font-size:12px;color:#94a3b8;margin-bottom:12px;line-height:1.6;">
+            直接调用 OpenAI 官方私有接口，查询您 Plus 邀请人名下的历史邀请人列表与状态（需提供邀请人 Bearer Access Token）。普通买家请使用顶部的“卡密进度查询”。
+          </p>
+          
+          <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+            <input type="text" id="ipt-tracking-token" name="tracking_token_input" placeholder="粘贴 Plus 邀请人 Token（或点击上方载入本机凭证）..."
+              autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+              data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other" aria-autocomplete="none"
+              style="flex:1;min-width:260px;">
+            <button class="btn-submit" style="width:auto;min-height:auto;padding:8px 20px;font-size:12.5px;margin:0;" onclick="queryTrackingNow()">查询列表</button>
+          </div>
+
+          <div id="tracking-table-box">
+            <div style="text-align:center;padding:30px;color:#64748b;font-size:12px;">输入 Plus 邀请人 Token 点击“查询列表”即可获取最新官方记录</div>
+          </div>
+
+        </div>
+      </div>
+      <!-- DEV_ONLY_END -->
+
+    </section>
+
+    <!-- 底部说明 -->
+    <footer class="footer">
+      <p>Codex Referral Activator · Native WSL2 Linux Headless Engine · 完全对齐官方桌面端真实推理协议栈</p>
+    </footer>
+
+  </main>
+
+  <!-- 操作指南与常见问题弹窗 -->
+  <dialog id="guide-modal" class="modal-dialog">
+    <div class="dialog-inner">
+      <div class="dialog-header">
+        <div>
+          <span style="font-size:11px;font-weight:700;color:var(--gold-300);text-transform:uppercase;letter-spacing:0.1em;">操作指引说明</span>
+          <h2 style="font-size:18px;font-weight:900;color:#f0f9ff;margin-top:2px;">Codex 邀请奖励全自动核销指南</h2>
+        </div>
+        <button class="dialog-close" onclick="closeGuideModal()">×</button>
+      </div>
+
+      <div style="padding:11px 15px;border-radius:12px;background:rgba(14,165,233,0.1);border:1px solid rgba(56,189,248,0.3);font-size:12px;color:#e0f2fe;line-height:1.6;">
+        <strong>⚠️ 资格前置要求：</strong>
+        您的 ChatGPT 账号在官方桌面端内需拥有<strong>“推荐朋友”</strong>活动入口（支持 250 / 500 / 1000 等不同活动档位）。若账号未开通该活动或额度已达上限，将无法入账。
+      </div>
+
+      <div class="dialog-steps">
+        <div class="dialog-step-card">
+          <div class="step-num">1</div>
+          <div>
+            <strong style="color:#fff;font-size:13.5px;">输入卡密兑换专属小号</strong>
+            <p style="font-size:12px;color:#94a3b8;margin-top:3px;line-height:1.5;">在首页输入您获得的卡密（CDK），点击【立即兑换】。系统将从纯净账号池中为您锁定分配一个专属的全新被邀请人邮箱。</p>
+          </div>
+        </div>
+
+        <div class="dialog-step-card">
+          <div class="step-num">2</div>
+          <div>
+            <strong style="color:#fff;font-size:13.5px;">在 GPT 桌面客户端发送邀请</strong>
+            <p style="font-size:12px;color:#94a3b8;margin-top:3px;line-height:1.5;">点击【一键复制邮箱】，打开您的官方 ChatGPT 桌面客户端（进入【设置】→【推荐朋友】），粘贴该邮箱并点击发送邀请邮件。</p>
+          </div>
+        </div>
+
+        <div class="dialog-step-card">
+          <div class="step-num">3</div>
+          <div>
+            <strong style="color:#fff;font-size:13.5px;">启动全自动核销 (官方桌面引擎直发)</strong>
+            <p style="font-size:12px;color:#94a3b8;margin-top:3px;line-height:1.5;">回到本页面点击【立即开始全自动激活】。系统将全自动完成：邮件验证码接收 ➔ 官方桌面客户端 OAuth 授权 ➔ 拉起官方原生 Linux Codex 引擎沙箱完成首轮会话推理（<code>codex_turn</code>）。</p>
+          </div>
+        </div>
+
+        <div class="dialog-step-card">
+          <div class="step-num">4</div>
+          <div>
+            <strong style="color:#fff;font-size:13.5px;">刷新查看邀请奖励 Credits 到账</strong>
+            <p style="font-size:12px;color:#94a3b8;margin-top:3px;line-height:1.5;">终端日志提示核销成功后，OpenAI 服务端奖励系统通常有 <strong>1 ~ 3 分钟的异步入账结算延迟</strong>。请在官方客户端【设置 → 推荐朋友 → 跟踪你的邀请】刷新即可看到完成记录与对应档位 Credits 额度点亮！</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:10px 14px;border-radius:12px;background:rgba(240,190,84,0.08);border:1px solid rgba(240,190,84,0.25);font-size:11.5px;color:var(--gold-200);line-height:1.5;">
+        💡 <strong>常见说明：</strong>专属活动奖励 Credits 全额发放至您的邀请人主账号。若遇网络延迟或接码风控，系统内置了多平台短信与验证码全自动兜底，可重试激活流程。
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;">
+        <button class="btn-submit" style="width:auto;padding:8px 24px;min-height:38px;font-size:13px;margin-top:0;" onclick="closeGuideModal()">知道了，开始操作</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- 前端核心交互逻辑 -->
+  <script>
+    // ==================== 全局禁用浏览器表单自动填充与历史提示下拉框 ====================
+    (function initAutofillPrevention() {
+      function secureInput(el) {
+        if (!el || el.type === 'checkbox' || el.type === 'radio' || el.type === 'hidden') return;
+        el.setAttribute('autocomplete', 'off');
+        el.setAttribute('autocorrect', 'off');
+        el.setAttribute('autocapitalize', 'off');
+        el.setAttribute('spellcheck', 'false');
+        el.setAttribute('data-lpignore', 'true');
+        el.setAttribute('data-1p-ignore', 'true');
+        el.setAttribute('data-bwignore', 'true');
+        el.setAttribute('data-form-type', 'other');
+        el.setAttribute('aria-autocomplete', 'none');
+      }
+
+      function applyToAll() {
+        document.querySelectorAll('input, textarea').forEach(secureInput);
+        document.querySelectorAll('form').forEach(f => f.setAttribute('autocomplete', 'off'));
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyToAll);
+      } else {
+        applyToAll();
+      }
+
+      // 动态捕获聚焦事件，彻底抑制 Chrome/Edge 记忆提示浮窗
+      document.addEventListener('focusin', function(e) {
+        var el = e.target;
+        if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
+          secureInput(el);
+        }
+      }, true);
+    })();
+
+    // ==================== 统一自定义 Toast 通知组件 ====================
+    function showToast(message, type = 'info', duration = 3500) {
+      let container = document.getElementById('toast-container');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+      }
+
+      const icons = {
+        success: '🎉',
+        error: '❌',
+        warning: '⚠️',
+        info: '💡'
+      };
+
+      const item = document.createElement('div');
+      item.className = `toast-item toast-${type}`;
+      item.innerHTML = `
+        <span class="toast-icon">${icons[type] || '💡'}</span>
+        <div class="toast-content">${escapeHtml(message)}</div>
+        <span class="toast-close" title="关闭">&times;</span>
+      `;
+
+      container.appendChild(item);
+
+      const closeFn = () => {
+        item.classList.add('toast-out');
+        setTimeout(() => {
+          if (item.parentNode) item.parentNode.removeChild(item);
+        }, 250);
+      };
+
+      item.querySelector('.toast-close').onclick = closeFn;
+
+      if (duration > 0) {
+        setTimeout(closeFn, duration);
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    // 全局替换 window.alert，禁止任何浏览器原生白框弹窗
+    window.alert = function(msg) {
+      let type = 'info';
+      const m = String(msg || '');
+      if (m.includes('成功') || m.includes('完成') || m.includes('🎉') || m.includes('✅')) type = 'success';
+      else if (m.includes('失败') || m.includes('异常') || m.includes('错误') || m.includes('❌')) type = 'error';
+      else if (m.includes('请') || m.includes('警告') || m.includes('⚠️')) type = 'warning';
+      showToast(m, type);
+    };
+
+    let currentTaskId = null;
+    let sseSource = null;
+    let isRunning = false;
+    let localInviterCache = null;
+
+    // ==================== 实时数据看板与动态播报 ====================
+    let liveTickerItems = [];
+    let liveTickerIndex = 0;
+    let tickerTimer = null;
+
+    async function fetchLiveStats() {
+      try {
+        const res = await fetch('/api/live-stats');
+        const data = await res.json();
+        if (data.success) {
+          const elOnline = document.getElementById('stat-online-num');
+          const elActive = document.getElementById('stat-active-num');
+          const el2h = document.getElementById('stat-2h-num');
+          if (elOnline) elOnline.innerText = data.online_count || '--';
+          if (elActive) elActive.innerText = data.active_tasks_count ?? '0';
+          if (el2h) el2h.innerText = data.completed_last_2h || '--';
+
+          if (data.recent_completions && data.recent_completions.length > 0) {
+            liveTickerItems = data.recent_completions;
+            if (!tickerTimer) {
+              renderNextTicker();
+              tickerTimer = setInterval(renderNextTicker, 3800);
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('获取实时动态异常:', e);
+      }
+    }
+
+    function renderNextTicker() {
+      if (!liveTickerItems || liveTickerItems.length === 0) return;
+      const wrap = document.getElementById('live-ticker-wrap');
+      if (!wrap) return;
+
+      const item = liveTickerItems[liveTickerIndex % liveTickerItems.length];
+      liveTickerIndex++;
+
+      wrap.innerHTML = `
+        <div class="ticker-item">
+          <span class="ticker-time">${escapeHtml(item.time_ago)}</span>
+          <span class="ticker-sep">·</span>
+          <span class="ticker-card">${escapeHtml(item.card_key)}</span>
+          <span class="ticker-email" title="${escapeHtml(item.email)}">(${escapeHtml(item.email)})</span>
+          <span class="ticker-tag">✨ 到账 ${escapeHtml(item.credits || '500 Credits')}</span>
+        </div>
+      `;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initSystem();
+      fetchLiveStats();
+      setInterval(fetchLiveStats, 20000);
+    });
+
+    async function initSystem() {
+      try {
+        const res = await fetch('/api/system');
+        const data = await res.json();
+        
+        const elVer = document.getElementById('sys-codex-ver');
+        if (elVer) {
+          if (data.codex && data.codex.exists) {
+            elVer.innerText = data.codex.version.replace('codex-cli ', 'v');
+          } else {
+            elVer.innerText = '未就绪';
+          }
+        }
+
+        if (data.default_proxy) {
+          document.getElementById('ipt-proxy').value = data.default_proxy;
+        }
+
+        if (data.local_inviter && data.local_inviter.detected) {
+          localInviterCache = data.local_inviter;
+          const btn = document.getElementById('btn-load-local-track');
+          if (btn) {
+            btn.style.display = 'inline-block';
+            btn.innerText = `⚡ 自动载入本机 Plus 凭证 (${data.local_inviter.email || 'Plus 用户'})`;
+          }
+        }
+      } catch (e) {
+        console.error('初始化失败:', e);
+      }
+    }
+
+    let currentAllocatedEmail = '';
+    let currentRedeemedCardKey = '';
+
+    function switchMainTab(mode) {
+      document.getElementById('tab-btn-card')?.classList.toggle('active', mode === 'card');
+      document.getElementById('tab-btn-token')?.classList.toggle('active', mode === 'token');
+      document.getElementById('tab-btn-tracking')?.classList.toggle('active', mode === 'tracking');
+
+      const devSubnav = document.getElementById('dev-subnav');
+      if (devSubnav) {
+        devSubnav.style.display = (mode === 'token') ? 'flex' : 'none';
+      }
+
+      const viewAct = document.getElementById('view-activate');
+      const viewTracking = document.getElementById('view-tracking');
+      const viewDevTrack = document.getElementById('view-dev-track');
+      const panelCard = document.getElementById('panel-card-flow');
+      const panelToken = document.getElementById('panel-token-flow');
+
+      if (mode === 'card') {
+        if (viewAct) viewAct.style.display = 'grid';
+        if (panelCard) panelCard.style.display = 'block';
+        if (panelToken) panelToken.style.display = 'none';
+        if (viewTracking) viewTracking.style.display = 'none';
+        if (viewDevTrack) viewDevTrack.style.display = 'none';
+      } else if (mode === 'token') {
+        if (viewTracking) viewTracking.style.display = 'none';
+        const isTrack = document.getElementById('dev-subtab-track')?.classList.contains('active');
+        if (typeof switchDevSubTab === 'function') switchDevSubTab(isTrack ? 'track' : 'act');
+      } else if (mode === 'tracking') {
+        if (viewAct) viewAct.style.display = 'none';
+        if (viewTracking) viewTracking.style.display = 'grid';
+        if (viewDevTrack) viewDevTrack.style.display = 'none';
+      }
+    }
+
+    function switchTab(tab) {
+      if (tab === 'activate') switchMainTab('card');
+      else switchMainTab(tab);
+    }
+
+    async function redeemCardKey() {
+      const cardKey = document.getElementById('ipt-card-key').value.trim();
+      const msgEl = document.getElementById('redeem-msg');
+      msgEl.style.display = 'none';
+      if (!cardKey) {
+        showToast('请输入兑换卡密', 'warning');
+        return;
+      }
+
+      try {
+        const resp = await fetch('/api/redeem-card', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ card_key: cardKey })
+        });
+        const data = await resp.json();
+        if (data.success) {
+          currentRedeemedCardKey = cardKey;
+          currentAllocatedEmail = data.email;
+          document.getElementById('allocated-email-text').innerText = data.email;
+          document.getElementById('step-invite-box').style.display = 'block';
+          document.getElementById('step-action-box').style.display = 'block';
+          msgEl.innerHTML = `<span style="color:#86efac;font-weight:600;">✅ ${data.message}</span>`;
+          msgEl.style.display = 'block';
+          showToast(data.message, 'success');
+        } else {
+          msgEl.innerHTML = `<span style="color:#fca5a5;font-weight:600;">❌ ${data.error}</span>`;
+          msgEl.style.display = 'block';
+          showToast(data.error, 'error');
+        }
+      } catch(e) {
+        msgEl.innerHTML = `<span style="color:#fca5a5;">❌ 请求异常: ${e}</span>`;
+        msgEl.style.display = 'block';
+        showToast('请求异常: ' + e, 'error');
+      }
+    }
+
+    async function copyAllocatedEmail() {
+      if (!currentAllocatedEmail) return;
+      try {
+        await navigator.clipboard.writeText(currentAllocatedEmail);
+        showToast('已复制被邀请邮箱: ' + currentAllocatedEmail + '\n请打开官方 GPT 桌面客户端（设置 -> 推荐朋友）发送邀请！', 'success', 5000);
+      } catch(e) {
+        showToast('请手动选中复制: ' + currentAllocatedEmail, 'warning');
+      }
+    }
+
+    async function startCardActivation() {
+      if (isRunning) return;
+      if (!currentRedeemedCardKey || !currentAllocatedEmail) {
+        showToast('请先输入卡密兑换被邀请邮箱', 'warning');
+        return;
+      }
+
+      const proxy = document.getElementById('ipt-proxy')?.value?.trim() || '';
+
+      resetSteps();
+      clearLogs();
+      const bannerRedeemed = document.getElementById('banner-redeemed');
+      if (bannerRedeemed) bannerRedeemed.style.display = 'none';
+      const bannerPending = document.getElementById('banner-pending');
+      if (bannerPending) bannerPending.style.display = 'none';
+
+      setRunning(true);
+      const badge = document.getElementById('task-badge');
+      if (badge) {
+        badge.innerText = '官方客户端授权中...';
+        badge.style.color = 'var(--gold-300)';
+      }
+
+      appendLog(`[Core] 正在针对卡密 [${currentRedeemedCardKey}] 与邮箱 [${currentAllocatedEmail}] 启动全自动核销...`, 'info');
+
+      try {
+        const resp = await fetch('/api/card-activate', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            card_key: currentRedeemedCardKey,
+            email: currentAllocatedEmail,
+            proxy: proxy
+          })
+        });
+        const data = await resp.json();
+        if (!resp.ok || !data.task_id) {
+          throw new Error(data.error || '创建激活任务失败');
+        }
+
+        currentTaskId = data.task_id;
+        appendLog(`[Core] 任务创建成功 (Task ID: ${currentTaskId})，建立实时推流...`, 'success');
+        listenStream(currentTaskId);
+      } catch(e) {
+        appendLog('❌ 任务启动失败: ' + (e.message || e), 'error');
+        setRunning(false);
+      }
+    }
+
+    function openGuideModal() {
+      document.getElementById('guide-modal').showModal();
+    }
+    function closeGuideModal() {
+      document.getElementById('guide-modal').close();
+    }
+
+    function loadLocalInviterTrack() {
+      if (localInviterCache && localInviterCache.token) {
+        document.getElementById('ipt-tracking-token').value = localInviterCache.token;
+        appendLog(`[System] 已载入本机 Plus 凭证: ${localInviterCache.email}`, 'info');
+        queryTrackingNow();
+      }
+    }
+
+    // Token 动态解析
+    function parseTokenInput() {
+      let val = document.getElementById('ipt-token').value.trim();
+      if (!val) {
+        document.getElementById('jwt-card').style.display = 'none';
+        return;
+      }
+      if (val.startsWith('{') && val.endsWith('}')) {
+        try {
+          const parsed = JSON.parse(val);
+          val = parsed?.tokens?.access_token || parsed?.access_token || val;
+        } catch(e) {}
+      }
+      if (val.toLowerCase().startsWith('bearer ')) {
+        val = val.substring(7).trim();
+      }
+
+      try {
+        const parts = val.split('.');
+        if (parts.length >= 2) {
+          let b64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+          while (b64.length % 4) b64 += '=';
+          const payload = JSON.parse(decodeURIComponent(escape(atob(b64))));
+
+          const auth = payload['https://api.openai.com/auth'] || {};
+          const prof = payload['https://api.openai.com/profile'] || {};
+          const email = prof.email || payload.email || '未知邮箱';
+          const acc = auth.chatgpt_account_id || '自动提取';
+          const plan = (auth.chatgpt_plan_type || 'FREE').toUpperCase();
+
+          document.getElementById('jwt-email').innerText = email;
+          document.getElementById('jwt-acc').innerText = acc;
+          document.getElementById('jwt-plan').innerText = plan;
+
+          const clientId = payload.client_id || '';
+          const isDesktop = (clientId === 'app_EMoamEEZ73f0CkXaXp7hrann');
+
+          const typeEl = document.getElementById('jwt-token-type');
+          const warnBox = document.getElementById('jwt-warn-box');
+          if (typeEl && warnBox) {
+            if (isDesktop) {
+              typeEl.innerText = '✅ 官方桌面客户端凭证 (合格)';
+              typeEl.style.background = 'rgba(34, 197, 94, 0.2)';
+              typeEl.style.color = '#86efac';
+              typeEl.style.border = '1px solid rgba(34, 197, 94, 0.4)';
+              warnBox.style.display = 'none';
+            } else {
+              typeEl.innerText = '⚠️ 网页端 Token (无法核销)';
+              typeEl.style.background = 'rgba(239, 68, 68, 0.2)';
+              typeEl.style.color = '#fca5a5';
+              typeEl.style.border = '1px solid rgba(239, 68, 68, 0.4)';
+              warnBox.style.display = 'block';
+            }
+          }
+
+          document.getElementById('jwt-card').style.display = 'flex';
+          return;
+        }
+      } catch(e) {}
+      document.getElementById('jwt-card').style.display = 'none';
+    }
+
+    async function pasteClipboard(id) {
+      try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById(id).value = text;
+        if (id === 'ipt-token') parseTokenInput();
+        showToast('已从剪贴板粘贴凭证', 'info');
+      } catch(e) {
+        showToast('读取剪贴板受限，请手动按 Ctrl+V 粘贴', 'warning');
+      }
+    }
+    function clearInput(id) {
+      document.getElementById(id).value = '';
+      if (id === 'ipt-token') parseTokenInput();
+    }
+
+    // 启动激活核销 (仅需被邀请人凭证)
+    async function startActivation() {
+      if (isRunning) return;
+      const token = document.getElementById('ipt-token').value.trim();
+      const proxy = document.getElementById('ipt-proxy')?.value?.trim() || '';
+
+      if (!token) {
+        showToast('请先输入被邀请人的 Access Token！', 'warning');
+        return;
+      }
+
+      resetSteps();
+      clearLogs();
+      document.getElementById('banner-redeemed').style.display = 'none';
+      setRunning(true);
+
+      appendLog('[Core] 正在向 WSL 服务端发起全自动激活请求...', 'info');
+
+      try {
+        const res = await fetch('/api/activate', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            token,
+            proxy: proxy
+          })
+        });
+        const data = await res.json();
+        if (data.error) {
+          appendLog(`[Error] 启动失败: ${data.error}`, 'error');
+          setRunning(false);
+          return;
+        }
+
+        currentTaskId = data.task_id;
+        appendLog(`[Core] 任务创建成功 (Task ID: ${currentTaskId})，建立实时推流...`, 'success');
+        listenStream(currentTaskId);
+      } catch (e) {
+        appendLog(`[Error] 请求异常: ${e}`, 'error');
+        setRunning(false);
+      }
+    }
+
+    function listenStream(taskId) {
+      if (sseSource) sseSource.close();
+      sseSource = new EventSource(`/api/stream/${taskId}`);
+
+      sseSource.addEventListener('log', (e) => {
+        const log = JSON.parse(e.data);
+        appendLog(log.text, log.type);
+      });
+
+      sseSource.addEventListener('step', (e) => {
+        const sData = JSON.parse(e.data);
+        updateSteps(sData.current_step, sData.step_status);
+      });
+
+      sseSource.addEventListener('done', (e) => {
+        const dData = JSON.parse(e.data);
+        sseSource.close();
+        sseSource = null;
+        setRunning(false);
+
+        if (dData.status === 'redeemed') {
+          document.getElementById('task-badge').innerText = '🎉 已核销 (REDEEMED)';
+          document.getElementById('task-badge').style.color = '#34d399';
+          document.getElementById('banner-redeemed').style.display = 'block';
+          document.getElementById('banner-pending').style.display = 'none';
+        } else if (dData.status === 'pending') {
+          document.getElementById('task-badge').innerText = '⚠️ 未到账 (仍为 PENDING)';
+          document.getElementById('task-badge').style.color = '#fbbf24';
+          document.getElementById('banner-redeemed').style.display = 'none';
+          document.getElementById('banner-pending').style.display = 'block';
+        } else if (dData.status === 'completed') {
+          document.getElementById('task-badge').innerText = '⚠️ 会话完毕 (未到账)';
+          document.getElementById('task-badge').style.color = '#fbbf24';
+          document.getElementById('banner-redeemed').style.display = 'none';
+          document.getElementById('banner-pending').style.display = 'block';
+        } else if (dData.status === 'stopped') {
+          document.getElementById('task-badge').innerText = '任务已停止';
+          document.getElementById('task-badge').style.color = '#fbbf24';
+        } else {
+          document.getElementById('task-badge').innerText = '执行异常';
+          document.getElementById('task-badge').style.color = '#f87171';
+        }
+      });
+    }
+
+    async function stopTask() {
+      if (!currentTaskId) return;
+      try {
+        appendLog('[System] 发送终止任务指令...', 'warning');
+        await fetch(`/api/task/${currentTaskId}/stop`, {method: 'POST'});
+      } catch(e) {}
+    }
+
+    function setRunning(r) {
+      isRunning = r;
+      const btn = document.getElementById('btn-start');
+      const btnCard = document.getElementById('btn-card-start');
+      const btnStop = document.getElementById('btn-stop');
+      const badge = document.getElementById('task-badge');
+
+      if (r) {
+        if (btn) {
+          btn.disabled = true;
+          const btnText = document.getElementById('btn-text');
+          const btnIcon = document.getElementById('btn-icon');
+          if (btnText) btnText.innerText = '正在驱动官方引擎推理核销...';
+          if (btnIcon) btnIcon.innerText = '⏳';
+        }
+        if (btnCard) {
+          btnCard.disabled = true;
+          const cardText = document.getElementById('btn-card-text');
+          const cardIcon = document.getElementById('btn-card-icon');
+          if (cardText) cardText.innerText = '正在执行官方授权与自动核销...';
+          if (cardIcon) cardIcon.innerText = '⏳';
+        }
+        if (btnStop) btnStop.style.display = 'flex';
+        if (badge) {
+          badge.innerText = '正在执行中...';
+          badge.style.color = 'var(--gold-300)';
+        }
+      } else {
+        if (btn) {
+          btn.disabled = false;
+          const btnText = document.getElementById('btn-text');
+          const btnIcon = document.getElementById('btn-icon');
+          if (btnText) btnText.innerText = '立即执行全自动激活核销';
+          if (btnIcon) btnIcon.innerText = '🚀';
+        }
+        if (btnCard) {
+          btnCard.disabled = false;
+          const cardText = document.getElementById('btn-card-text');
+          const cardIcon = document.getElementById('btn-card-icon');
+          if (cardText) cardText.innerText = '我已在客户端发送邀请，立即激活';
+          if (cardIcon) cardIcon.innerText = '🚀';
+        }
+        if (btnStop) btnStop.style.display = 'none';
+      }
+    }
+
+    function resetSteps() {
+      for (let i = 1; i <= 7; i++) {
+        const item = document.getElementById(`step-${i}`);
+        const icon = document.getElementById(`s-icon-${i}`);
+        if (item) item.className = (i === 5) ? 'step-item core' : 'step-item';
+        if (icon) icon.innerText = '⚪';
+      }
+    }
+
+    function updateSteps(curr, statuses) {
+      for (let i = 1; i <= 7; i++) {
+        const item = document.getElementById(`step-${i}`);
+        const icon = document.getElementById(`s-icon-${i}`);
+        if (!item || !icon) continue;
+
+        const st = statuses[i];
+        if (st === 'completed') {
+          item.className = (i === 5) ? 'step-item core completed' : 'step-item completed';
+          icon.innerText = '✅';
+        } else if (st === 'active') {
+          item.className = (i === 5) ? 'step-item core active' : 'step-item active';
+          icon.innerText = '⏳';
+        } else if (st === 'warning') {
+          item.className = (i === 5) ? 'step-item core warning' : 'step-item warning';
+          icon.innerText = '⚠️';
+        } else if (st === 'failed') {
+          item.className = (i === 5) ? 'step-item core failed' : 'step-item failed';
+          icon.innerText = '❌';
+        }
+      }
+    }
+
+    // 终端管理
+    function appendLog(text, type = 'info') {
+      const view = document.getElementById('term-view');
+      const line = document.createElement('div');
+      line.className = `log-line log-${type}`;
+      line.innerText = text;
+      view.appendChild(line);
+
+      if (document.getElementById('chk-scroll').checked) {
+        view.scrollTop = view.scrollHeight;
+      }
+    }
+    function clearLogs() {
+      document.getElementById('term-view').innerHTML = '';
+    }
+    function copyLogs() {
+      const text = document.getElementById('term-view').innerText;
+      navigator.clipboard.writeText(text);
+      showToast('终端日志已成功复制到剪贴板！', 'success');
+    }
+
+    // 切换子面板 (凭证自动核销 vs 官方 Token 追踪)
+    function switchDevSubTab(tab) {
+      const btnAct = document.getElementById('dev-subtab-act');
+      const btnTrack = document.getElementById('dev-subtab-track');
+      const viewAct = document.getElementById('view-activate');
+      const viewDevTrack = document.getElementById('view-dev-track');
+      const panelCard = document.getElementById('panel-card-flow');
+      const panelToken = document.getElementById('panel-token-flow');
+
+      if (btnAct) btnAct.classList.toggle('active', tab === 'act');
+      if (btnTrack) btnTrack.classList.toggle('active', tab === 'track');
+
+      if (tab === 'act') {
+        if (viewAct) viewAct.style.display = 'grid';
+        if (panelToken) panelToken.style.display = 'block';
+        if (panelCard) panelCard.style.display = 'none';
+        if (viewDevTrack) viewDevTrack.style.display = 'none';
+      } else {
+        if (viewAct) viewAct.style.display = 'none';
+        if (viewDevTrack) viewDevTrack.style.display = 'grid';
+      }
+    }
+
+    // 核心功能: 免 Token 输入卡密/邮箱直接查询核销进度
+    async function queryCardProgressNow() {
+      const q = document.getElementById('ipt-card-query')?.value.trim();
+      const box = document.getElementById('card-progress-result-box');
+      if (!q) {
+        showToast('请输入卡密 (CDK) 或邮箱', 'warning');
+        return;
+      }
+
+      box.innerHTML = '<div style="text-align:center;padding:36px;color:var(--gold-300);font-size:13px;">⏳ 正在查询卡密核销记录...</div>';
+
+      try {
+        const resp = await fetch('/api/query-card-progress', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ keyword: q })
+        });
+        const data = await resp.json();
+        if (!data.success) {
+          box.innerHTML = `<div style="text-align:center;padding:26px;color:#fca5a5;background:rgba(239,68,68,0.1);border-radius:14px;border:1px solid rgba(239,68,68,0.3);font-size:13px;">❌ ${escapeHtml(data.error || '未找到该卡密或邮箱记录')}</div>`;
+          return;
+        }
+
+        const info = data.data || {};
+        const st = info.status || 'unknown';
+        const accSt = info.account_status || '';
+        const isCompleted = (st === 'used' || accSt === 'completed');
+        const isBound = (st === 'bound' || accSt === 'allocated' || accSt === 'activating');
+        const isUnused = (st === 'unused');
+        const isDisabled = (st === 'disabled');
+
+        let badgeHtml = '';
+        let hintHtml = '';
+
+        if (isCompleted) {
+          badgeHtml = '<span style="color:#34d399;font-weight:800;background:rgba(16,185,129,0.18);padding:4px 12px;border-radius:8px;border:1px solid rgba(16,185,129,0.4);font-size:12.5px;">🎉 已核销完成 (REDEEMED)</span>';
+          hintHtml = `
+            <div style="padding:12px 16px;border-radius:12px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);font-size:12px;color:#d1fae5;line-height:1.6;margin-top:14px;">
+              <strong>✅ 官方会话核销完成：</strong> 本卡密已由官方 Codex Desktop 引擎成功完成原生首轮推理，核销链路已闭环！<br>
+              OpenAI 服务端奖励系统通常有 <strong>1 ~ 3 分钟的异步入账结算延迟</strong>，请打开您的官方 ChatGPT 桌面客户端，进入【设置】→【推荐朋友】→【跟踪你的邀请】刷新即可查看到账记录与 Credits 额度点亮。
+            </div>
+          `;
+        } else if (isBound) {
+          badgeHtml = '<span style="color:#fbbf24;font-weight:700;background:rgba(251,191,36,0.18);padding:4px 12px;border-radius:8px;border:1px solid rgba(251,191,36,0.4);font-size:12.5px;">⏳ 邮箱已分配 (待执行激活)</span>';
+          hintHtml = `
+            <div style="padding:12px 16px;border-radius:12px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);font-size:12px;color:#fef08a;line-height:1.6;margin-top:14px;">
+              <strong>⏳ 待处理提示：</strong> 该卡密已绑定专属小号。若您已在官方客户端向该邮箱发送邀请，请返回首页点击【立即开始自动激活】启动首轮会话核销。
+            </div>
+          `;
+        } else if (isUnused) {
+          badgeHtml = '<span style="color:#38bdf8;font-weight:700;background:rgba(56,189,248,0.18);padding:4px 12px;border-radius:8px;border:1px solid rgba(56,189,248,0.4);font-size:12.5px;">✨ 全新有效 (尚未兑换)</span>';
+          hintHtml = `
+            <div style="padding:12px 16px;border-radius:12px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);font-size:12px;color:#e0f2fe;line-height:1.6;margin-top:14px;">
+              <strong>💡 兑换指引：</strong> 该卡密有效且未被兑换。请前往首页【卡密兑换】输入卡密点击“立即兑换”获取专属小号。
+            </div>
+          `;
+        } else if (isDisabled) {
+          badgeHtml = '<span style="color:#f87171;font-weight:700;background:rgba(239,68,68,0.18);padding:4px 12px;border-radius:8px;border:1px solid rgba(239,68,68,0.4);font-size:12.5px;">❌ 已作废</span>';
+          hintHtml = '<div style="padding:12px 16px;border-radius:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);font-size:12px;color:#fca5a5;margin-top:14px;">该卡密已被管理员作废。</div>';
+        } else {
+          badgeHtml = `<span style="color:#cbd5e1;font-weight:700;background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:8px;font-size:12.5px;">${escapeHtml(st.toUpperCase())}</span>`;
+        }
+
+        const emailText = info.assigned_email || info.email || '尚未分配';
+        const usedAtText = info.used_at || info.account_updated_at || '--';
+        const cardKeyText = info.card_key || q;
+
+        box.innerHTML = `
+          <div style="background:rgba(11,18,33,0.95);border:1px solid rgba(56,189,248,0.3);border-radius:16px;padding:20px;box-shadow:0 8px 30px rgba(0,0,0,0.5);">
+            <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:14px;flex-wrap:wrap;gap:10px;">
+              <div>
+                <span style="font-size:11px;color:#94a3b8;display:block;">卡密编号</span>
+                <span style="font-size:16px;font-weight:900;color:#fff;font-family:'JetBrains Mono',monospace;">${escapeHtml(cardKeyText)}</span>
+              </div>
+              <div>${badgeHtml}</div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;margin-top:16px;">
+              <div style="background:rgba(255,255,255,0.03);padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.05);">
+                <span style="font-size:11.5px;color:#94a3b8;display:block;margin-bottom:4px;">绑定被邀请小号</span>
+                <span style="font-size:13.5px;font-weight:700;color:var(--gold-300);font-family:'JetBrains Mono',monospace;">${escapeHtml(emailText)}</span>
+              </div>
+              <div style="background:rgba(255,255,255,0.03);padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.05);">
+                <span style="font-size:11.5px;color:#94a3b8;display:block;margin-bottom:4px;">核销完成时间</span>
+                <span style="font-size:13.5px;font-weight:700;color:#e2e8f0;font-family:'JetBrains Mono',monospace;">${escapeHtml(usedAtText)}</span>
+              </div>
+            </div>
+
+            ${hintHtml}
+          </div>
+        `;
+      } catch(e) {
+        box.innerHTML = `<div style="text-align:center;padding:26px;color:#fca5a5;">查询异常: ${escapeHtml(e)}</div>`;
+      }
+    }
+
+    // 单独查询邀请人追踪列表 (仅在 Tracking 标签页生效)
+    async function queryTrackingNow() {
+      let refToken = document.getElementById('ipt-tracking-token')?.value.trim() || '';
+      if (!refToken && localInviterCache && localInviterCache.token) {
+        refToken = localInviterCache.token;
+        const ipt = document.getElementById('ipt-tracking-token');
+        if (ipt) ipt.value = refToken;
+      }
+      const proxy = document.getElementById('ipt-proxy')?.value?.trim() || '';
+      const box = document.getElementById('tracking-table-box');
+
+      if (!refToken) {
+        box.innerHTML = '<div style="text-align:center;padding:26px;color:#f87171;">请先输入 Plus 邀请人 Token 或点击上方“自动载入本机 Plus 凭证”</div>';
+        return;
+      }
+
+      box.innerHTML = '<div style="text-align:center;padding:26px;color:#cbd5e1;">正在从 OpenAI 获取最新追踪明细...</div>';
+
+      try {
+        const res = await fetch('/api/tracking', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({referrer_token: refToken, proxy: proxy})
+        });
+        const data = await res.json();
+        if (!data.success) {
+          box.innerHTML = `<div style="text-align:center;padding:26px;color:#f87171;">查询失败: ${data.error || '接口受限'}</div>`;
+          return;
+        }
+
+        const items = data.data?.items || [];
+        if (items.length === 0) {
+          box.innerHTML = '<div style="text-align:center;padding:26px;color:#8c7899;">本周期内暂无任何邀请记录</div>';
+          return;
+        }
+
+        let html = `
+          <table class="tracking-table">
+            <thead>
+              <tr>
+                <th>被邀请人邮箱</th>
+                <th>核销状态</th>
+                <th>奖励明细</th>
+                <th>Referral ID</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+
+        items.forEach(it => {
+          const isRed = it.status === 'redeemed';
+          const badge = isRed
+            ? '<span style="color:#34d399;font-weight:800;background:rgba(16,185,129,0.18);padding:3px 8px;border-radius:6px;border:1px solid rgba(16,185,129,0.4);">REDEEMED ✅</span>'
+            : `<span style="color:#fbbf24;font-weight:700;background:rgba(251,191,36,0.18);padding:3px 8px;border-radius:6px;border:1px solid rgba(251,191,36,0.4);">${it.status.toUpperCase()} ⏳</span>`;
+
+          const grants = it.grants?.map(g => `${g.recipient}: +${g.amount} Credits`).join(', ') || '已奖励 Credits';
+
+          html += `
+            <tr>
+              <td style="color:#fff;font-weight:600;">${it.email}</td>
+              <td>${badge}</td>
+              <td style="color:var(--gold-300);">${grants}</td>
+              <td style="color:#8c7899;font-size:10px;">${it.referral_id || '--'}</td>
+            </tr>
+          `;
+        });
+
+        html += '</tbody></table>';
+        box.innerHTML = html;
+      } catch(e) {
+        box.innerHTML = `<div style="text-align:center;padding:26px;color:#f87171;">请求异常: ${e}</div>`;
+      }
+    }
+  </script>
+</body>
+</html>

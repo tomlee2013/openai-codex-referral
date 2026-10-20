@@ -1,0 +1,5 @@
+starlette>=0.30.0
+uvicorn>=0.24.0
+sse-starlette>=1.8.0
+requests>=2.31.0
+tls-client>=1.0.1

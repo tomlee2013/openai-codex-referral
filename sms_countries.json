@@ -1,0 +1,987 @@
+[
+  {
+    "id": 0,
+    "name": "俄罗斯",
+    "eng": "Russia"
+  },
+  {
+    "id": 1,
+    "name": "乌克兰",
+    "eng": "Ukraine"
+  },
+  {
+    "id": 2,
+    "name": "哈萨克斯坦",
+    "eng": "Kazakhstan"
+  },
+  {
+    "id": 3,
+    "name": "中国",
+    "eng": "China"
+  },
+  {
+    "id": 4,
+    "name": "菲律宾",
+    "eng": "Philippines"
+  },
+  {
+    "id": 5,
+    "name": "缅甸",
+    "eng": "Myanmar"
+  },
+  {
+    "id": 6,
+    "name": "印度尼西亚",
+    "eng": "Indonesia"
+  },
+  {
+    "id": 7,
+    "name": "马来西亚",
+    "eng": "Malaysia"
+  },
+  {
+    "id": 8,
+    "name": "肯尼亚",
+    "eng": "Kenya"
+  },
+  {
+    "id": 9,
+    "name": "坦桑尼亚",
+    "eng": "Tanzania"
+  },
+  {
+    "id": 10,
+    "name": "越南",
+    "eng": "Vietnam"
+  },
+  {
+    "id": 11,
+    "name": "吉尔吉斯斯坦",
+    "eng": "Kyrgyzstan"
+  },
+  {
+    "id": 12,
+    "name": "美国(虚拟号)",
+    "eng": "USA Virtual"
+  },
+  {
+    "id": 13,
+    "name": "以色列",
+    "eng": "Israel"
+  },
+  {
+    "id": 14,
+    "name": "中国香港",
+    "eng": "Hong Kong"
+  },
+  {
+    "id": 15,
+    "name": "波兰",
+    "eng": "Poland"
+  },
+  {
+    "id": 16,
+    "name": "英国",
+    "eng": "United Kingdom"
+  },
+  {
+    "id": 17,
+    "name": "马达加斯加",
+    "eng": "Madagascar"
+  },
+  {
+    "id": 18,
+    "name": "刚果",
+    "eng": "DR Congo"
+  },
+  {
+    "id": 19,
+    "name": "尼日利亚",
+    "eng": "Nigeria"
+  },
+  {
+    "id": 20,
+    "name": "中国澳门",
+    "eng": "Macau"
+  },
+  {
+    "id": 21,
+    "name": "埃及",
+    "eng": "Egypt"
+  },
+  {
+    "id": 22,
+    "name": "印度",
+    "eng": "India"
+  },
+  {
+    "id": 23,
+    "name": "爱尔兰",
+    "eng": "Ireland"
+  },
+  {
+    "id": 24,
+    "name": "柬埔寨",
+    "eng": "Cambodia"
+  },
+  {
+    "id": 25,
+    "name": "老挝",
+    "eng": "Laos"
+  },
+  {
+    "id": 26,
+    "name": "海地",
+    "eng": "Haiti"
+  },
+  {
+    "id": 27,
+    "name": "象牙海岸",
+    "eng": "Ivory Coast"
+  },
+  {
+    "id": 28,
+    "name": "冈比亚",
+    "eng": "Gambia"
+  },
+  {
+    "id": 29,
+    "name": "塞尔维亚",
+    "eng": "Serbia"
+  },
+  {
+    "id": 30,
+    "name": "也门",
+    "eng": "Yemen"
+  },
+  {
+    "id": 31,
+    "name": "南非",
+    "eng": "South Africa"
+  },
+  {
+    "id": 32,
+    "name": "罗马尼亚",
+    "eng": "Romania"
+  },
+  {
+    "id": 33,
+    "name": "哥伦比亚",
+    "eng": "Colombia"
+  },
+  {
+    "id": 34,
+    "name": "爱沙尼亚",
+    "eng": "Estonia"
+  },
+  {
+    "id": 35,
+    "name": "阿塞拜疆",
+    "eng": "Azerbaijan"
+  },
+  {
+    "id": 36,
+    "name": "加拿大",
+    "eng": "Canada"
+  },
+  {
+    "id": 37,
+    "name": "摩洛哥",
+    "eng": "Morocco"
+  },
+  {
+    "id": 38,
+    "name": "加纳",
+    "eng": "Ghana"
+  },
+  {
+    "id": 39,
+    "name": "阿根廷",
+    "eng": "Argentina"
+  },
+  {
+    "id": 40,
+    "name": "乌兹别克斯坦",
+    "eng": "Uzbekistan"
+  },
+  {
+    "id": 41,
+    "name": "喀麦隆",
+    "eng": "Cameroon"
+  },
+  {
+    "id": 42,
+    "name": "乍得",
+    "eng": "Chad"
+  },
+  {
+    "id": 43,
+    "name": "德国",
+    "eng": "Germany"
+  },
+  {
+    "id": 44,
+    "name": "立陶宛",
+    "eng": "Lithuania"
+  },
+  {
+    "id": 45,
+    "name": "克罗地亚",
+    "eng": "Croatia"
+  },
+  {
+    "id": 46,
+    "name": "瑞典",
+    "eng": "Sweden"
+  },
+  {
+    "id": 47,
+    "name": "伊拉克",
+    "eng": "Iraq"
+  },
+  {
+    "id": 48,
+    "name": "荷兰",
+    "eng": "Netherlands"
+  },
+  {
+    "id": 49,
+    "name": "拉脱维亚",
+    "eng": "Latvia"
+  },
+  {
+    "id": 50,
+    "name": "奥地利",
+    "eng": "Austria"
+  },
+  {
+    "id": 51,
+    "name": "白俄罗斯",
+    "eng": "Belarus"
+  },
+  {
+    "id": 52,
+    "name": "泰国",
+    "eng": "Thailand"
+  },
+  {
+    "id": 53,
+    "name": "沙特阿拉伯",
+    "eng": "Saudi Arabia"
+  },
+  {
+    "id": 54,
+    "name": "墨西哥",
+    "eng": "Mexico"
+  },
+  {
+    "id": 55,
+    "name": "中国台湾",
+    "eng": "Taiwan"
+  },
+  {
+    "id": 56,
+    "name": "西班牙",
+    "eng": "Spain"
+  },
+  {
+    "id": 57,
+    "name": "伊朗",
+    "eng": "Iran"
+  },
+  {
+    "id": 58,
+    "name": "阿尔及利亚",
+    "eng": "Algeria"
+  },
+  {
+    "id": 59,
+    "name": "斯洛文尼亚",
+    "eng": "Slovenia"
+  },
+  {
+    "id": 60,
+    "name": "孟加拉国",
+    "eng": "Bangladesh"
+  },
+  {
+    "id": 61,
+    "name": "塞内加尔",
+    "eng": "Senegal"
+  },
+  {
+    "id": 62,
+    "name": "土耳其",
+    "eng": "Turkey"
+  },
+  {
+    "id": 63,
+    "name": "捷克共和国",
+    "eng": "Czech"
+  },
+  {
+    "id": 64,
+    "name": "斯里兰卡",
+    "eng": "Sri Lanka"
+  },
+  {
+    "id": 65,
+    "name": "秘鲁",
+    "eng": "Peru"
+  },
+  {
+    "id": 66,
+    "name": "巴基斯坦",
+    "eng": "Pakistan"
+  },
+  {
+    "id": 67,
+    "name": "新西兰",
+    "eng": "New Zealand"
+  },
+  {
+    "id": 68,
+    "name": "几内亚",
+    "eng": "Guinea"
+  },
+  {
+    "id": 69,
+    "name": "马里",
+    "eng": "Mali"
+  },
+  {
+    "id": 70,
+    "name": "委内瑞拉",
+    "eng": "Venezuela"
+  },
+  {
+    "id": 71,
+    "name": "埃塞俄比亚",
+    "eng": "Ethiopia"
+  },
+  {
+    "id": 72,
+    "name": "蒙古",
+    "eng": "Mongolia"
+  },
+  {
+    "id": 73,
+    "name": "巴西",
+    "eng": "Brazil"
+  },
+  {
+    "id": 74,
+    "name": "阿富汗",
+    "eng": "Afghanistan"
+  },
+  {
+    "id": 75,
+    "name": "乌干达",
+    "eng": "Uganda"
+  },
+  {
+    "id": 76,
+    "name": "安哥拉",
+    "eng": "Angola"
+  },
+  {
+    "id": 77,
+    "name": "塞浦路斯",
+    "eng": "Cyprus"
+  },
+  {
+    "id": 78,
+    "name": "法国",
+    "eng": "France"
+  },
+  {
+    "id": 79,
+    "name": "巴布亞新幾內亞",
+    "eng": "Papua"
+  },
+  {
+    "id": 80,
+    "name": "莫桑比克",
+    "eng": "Mozambique"
+  },
+  {
+    "id": 81,
+    "name": "尼泊爾",
+    "eng": "Nepal"
+  },
+  {
+    "id": 82,
+    "name": "比利時",
+    "eng": "Belgium"
+  },
+  {
+    "id": 83,
+    "name": "保加利亞",
+    "eng": "Bulgaria"
+  },
+  {
+    "id": 84,
+    "name": "匈牙利",
+    "eng": "Hungary"
+  },
+  {
+    "id": 85,
+    "name": "摩爾多瓦",
+    "eng": "Moldova"
+  },
+  {
+    "id": 86,
+    "name": "意大利",
+    "eng": "Italy"
+  },
+  {
+    "id": 87,
+    "name": "巴拉圭",
+    "eng": "Paraguay"
+  },
+  {
+    "id": 88,
+    "name": "洪都拉斯",
+    "eng": "Honduras"
+  },
+  {
+    "id": 89,
+    "name": "突尼斯",
+    "eng": "Tunisia"
+  },
+  {
+    "id": 90,
+    "name": "尼加拉瓜",
+    "eng": "Nicaragua"
+  },
+  {
+    "id": 91,
+    "name": "東帝汶",
+    "eng": "Timor-Leste"
+  },
+  {
+    "id": 92,
+    "name": "玻利維亞",
+    "eng": "Bolivia"
+  },
+  {
+    "id": 93,
+    "name": "哥斯達黎加",
+    "eng": "Costa Rica"
+  },
+  {
+    "id": 94,
+    "name": "危地馬拉",
+    "eng": "Guatemala"
+  },
+  {
+    "id": 95,
+    "name": "阿联酋",
+    "eng": "United Arab Emirates"
+  },
+  {
+    "id": 96,
+    "name": "津巴布韋",
+    "eng": "Zimbabwe"
+  },
+  {
+    "id": 97,
+    "name": "波多黎各",
+    "eng": "Puerto Rico"
+  },
+  {
+    "id": 98,
+    "name": "蘇丹蘇丹",
+    "eng": "Sudan"
+  },
+  {
+    "id": 99,
+    "name": "多哥",
+    "eng": "Togo"
+  },
+  {
+    "id": 100,
+    "name": "科威特",
+    "eng": "Kuwait"
+  },
+  {
+    "id": 101,
+    "name": "薩爾瓦多",
+    "eng": "Salvador"
+  },
+  {
+    "id": 102,
+    "name": "利比亞",
+    "eng": "Libya"
+  },
+  {
+    "id": 103,
+    "name": "牙買加",
+    "eng": "Jamaica"
+  },
+  {
+    "id": 104,
+    "name": "特立尼達和多巴哥",
+    "eng": "Trinidad and Tobago"
+  },
+  {
+    "id": 105,
+    "name": "厄瓜多爾",
+    "eng": "Ecuador"
+  },
+  {
+    "id": 106,
+    "name": "斯威士蘭",
+    "eng": "Swaziland"
+  },
+  {
+    "id": 107,
+    "name": "阿曼",
+    "eng": "Oman"
+  },
+  {
+    "id": 108,
+    "name": "波斯尼亞和黑塞哥維那",
+    "eng": "Bosnia"
+  },
+  {
+    "id": 109,
+    "name": "多明尼加共和國",
+    "eng": "Dominican Republic"
+  },
+  {
+    "id": 110,
+    "name": "敘利亞",
+    "eng": "Syria"
+  },
+  {
+    "id": 111,
+    "name": "卡塔爾",
+    "eng": "Qatar"
+  },
+  {
+    "id": 112,
+    "name": "巴拿馬",
+    "eng": "Panama"
+  },
+  {
+    "id": 113,
+    "name": "古巴",
+    "eng": "Cuba"
+  },
+  {
+    "id": 114,
+    "name": "毛里塔尼亞",
+    "eng": "Mauritania"
+  },
+  {
+    "id": 115,
+    "name": "塞拉利昂",
+    "eng": "Sierra Leone"
+  },
+  {
+    "id": 116,
+    "name": "約旦",
+    "eng": "Jordan"
+  },
+  {
+    "id": 117,
+    "name": "葡萄牙",
+    "eng": "Portugal"
+  },
+  {
+    "id": 118,
+    "name": "巴巴多斯",
+    "eng": "Barbados"
+  },
+  {
+    "id": 119,
+    "name": "布隆迪",
+    "eng": "Burundi"
+  },
+  {
+    "id": 120,
+    "name": "貝寧",
+    "eng": "Benin"
+  },
+  {
+    "id": 121,
+    "name": "文萊",
+    "eng": "Brunei"
+  },
+  {
+    "id": 122,
+    "name": "巴哈馬",
+    "eng": "Bahamas"
+  },
+  {
+    "id": 123,
+    "name": "博茨瓦納",
+    "eng": "Botswana"
+  },
+  {
+    "id": 124,
+    "name": "伯利茲",
+    "eng": "Belize"
+  },
+  {
+    "id": 125,
+    "name": "中非共和國",
+    "eng": "Central African Republic"
+  },
+  {
+    "id": 126,
+    "name": "多米尼加",
+    "eng": "Dominica"
+  },
+  {
+    "id": 127,
+    "name": "格林納達",
+    "eng": "Grenada"
+  },
+  {
+    "id": 128,
+    "name": "佐治亞州",
+    "eng": "Georgia"
+  },
+  {
+    "id": 129,
+    "name": "希臘",
+    "eng": "Greece"
+  },
+  {
+    "id": 130,
+    "name": "幾內亞比紹",
+    "eng": "Guinea-Bissau"
+  },
+  {
+    "id": 131,
+    "name": "圭亞那",
+    "eng": "Guyana"
+  },
+  {
+    "id": 132,
+    "name": "冰島",
+    "eng": "Iceland"
+  },
+  {
+    "id": 133,
+    "name": "科摩羅",
+    "eng": "Comoros"
+  },
+  {
+    "id": 134,
+    "name": "聖基茨和尼維斯",
+    "eng": "Saint Kitts and Nevis"
+  },
+  {
+    "id": 135,
+    "name": "利比里亞",
+    "eng": "Liberia"
+  },
+  {
+    "id": 136,
+    "name": "萊索托",
+    "eng": "Lesotho"
+  },
+  {
+    "id": 137,
+    "name": "馬拉維",
+    "eng": "Malawi"
+  },
+  {
+    "id": 138,
+    "name": "納米比亞",
+    "eng": "Namibia"
+  },
+  {
+    "id": 139,
+    "name": "尼日爾",
+    "eng": "Niger"
+  },
+  {
+    "id": 140,
+    "name": "盧旺達",
+    "eng": "Rwanda"
+  },
+  {
+    "id": 141,
+    "name": "斯洛伐克",
+    "eng": "Slovakia"
+  },
+  {
+    "id": 142,
+    "name": "蘇里南",
+    "eng": "Suriname"
+  },
+  {
+    "id": 143,
+    "name": "塔吉克斯坦",
+    "eng": "Tajikistan"
+  },
+  {
+    "id": 144,
+    "name": "摩納哥",
+    "eng": "Monaco"
+  },
+  {
+    "id": 145,
+    "name": "巴林",
+    "eng": "Bahrain"
+  },
+  {
+    "id": 146,
+    "name": "團圓",
+    "eng": "Reunion"
+  },
+  {
+    "id": 147,
+    "name": "贊比亞",
+    "eng": "Zambia"
+  },
+  {
+    "id": 148,
+    "name": "亞美尼亞",
+    "eng": "Armenia"
+  },
+  {
+    "id": 149,
+    "name": "索馬里",
+    "eng": "Somalia"
+  },
+  {
+    "id": 150,
+    "name": "剛果",
+    "eng": "Congo"
+  },
+  {
+    "id": 151,
+    "name": "智利",
+    "eng": "Chile"
+  },
+  {
+    "id": 152,
+    "name": "布基納法索",
+    "eng": "Burkina Faso"
+  },
+  {
+    "id": 153,
+    "name": "黎巴嫩",
+    "eng": "Lebanon"
+  },
+  {
+    "id": 154,
+    "name": "加蓬",
+    "eng": "Gabon"
+  },
+  {
+    "id": 155,
+    "name": "阿爾巴尼亞",
+    "eng": "Albania"
+  },
+  {
+    "id": 156,
+    "name": "烏拉圭",
+    "eng": "Uruguay"
+  },
+  {
+    "id": 157,
+    "name": "毛里求斯",
+    "eng": "Mauritius"
+  },
+  {
+    "id": 158,
+    "name": "丁烷",
+    "eng": "Bhutan"
+  },
+  {
+    "id": 159,
+    "name": "马尔代夫",
+    "eng": "Maldives"
+  },
+  {
+    "id": 160,
+    "name": "瓜德罗普岛",
+    "eng": "Guadeloupe"
+  },
+  {
+    "id": 161,
+    "name": "土库曼斯坦",
+    "eng": "Turkmenistan"
+  },
+  {
+    "id": 162,
+    "name": "法属圭亚那",
+    "eng": "French Guiana"
+  },
+  {
+    "id": 163,
+    "name": "芬兰",
+    "eng": "Finland"
+  },
+  {
+    "id": 164,
+    "name": "圣卢西亚",
+    "eng": "Saint Lucia"
+  },
+  {
+    "id": 165,
+    "name": "卢森堡",
+    "eng": "Luxembourg"
+  },
+  {
+    "id": 166,
+    "name": "圣文森特和格林纳丁斯",
+    "eng": "Saint Vincent and the Grenadines"
+  },
+  {
+    "id": 167,
+    "name": "赤道几内亚",
+    "eng": "Equatorial Guinea"
+  },
+  {
+    "id": 168,
+    "name": "吉布地",
+    "eng": "Djibouti"
+  },
+  {
+    "id": 169,
+    "name": "安提瓜和巴布达",
+    "eng": "Antigua and Barbuda"
+  },
+  {
+    "id": 170,
+    "name": "开曼群岛",
+    "eng": "Cayman Islands"
+  },
+  {
+    "id": 171,
+    "name": "黑山共和国",
+    "eng": "Montenegro"
+  },
+  {
+    "id": 172,
+    "name": "丹麥",
+    "eng": "Denmark"
+  },
+  {
+    "id": 173,
+    "name": "瑞士",
+    "eng": "Switzerland"
+  },
+  {
+    "id": 174,
+    "name": "挪威",
+    "eng": "Norway"
+  },
+  {
+    "id": 175,
+    "name": "澳大利亞",
+    "eng": "Australia"
+  },
+  {
+    "id": 176,
+    "name": "厄立特里亞",
+    "eng": "Eritrea"
+  },
+  {
+    "id": 177,
+    "name": "南蘇丹",
+    "eng": "South Sudan"
+  },
+  {
+    "id": 178,
+    "name": "聖多美和普林西比",
+    "eng": "Sao Tome and Principe"
+  },
+  {
+    "id": 179,
+    "name": "阿魯巴島",
+    "eng": "Aruba"
+  },
+  {
+    "id": 180,
+    "name": "蒙特塞拉特",
+    "eng": "Montserrat"
+  },
+  {
+    "id": 181,
+    "name": "安圭拉島",
+    "eng": "Anguilla"
+  },
+  {
+    "id": 182,
+    "name": "日本",
+    "eng": "Japan"
+  },
+  {
+    "id": 183,
+    "name": "北馬其頓",
+    "eng": "North Macedonia"
+  },
+  {
+    "id": 184,
+    "name": "塞舌爾共和國",
+    "eng": "Seychelles"
+  },
+  {
+    "id": 185,
+    "name": "新喀裡多尼亞",
+    "eng": "New Caledonia"
+  },
+  {
+    "id": 186,
+    "name": "佛得角",
+    "eng": "Cape Verde"
+  },
+  {
+    "id": 187,
+    "name": "美国(实体号)",
+    "eng": "United States"
+  },
+  {
+    "id": 188,
+    "name": "巴勒斯坦",
+    "eng": "Palestine"
+  },
+  {
+    "id": 189,
+    "name": "斐濟",
+    "eng": "Fiji"
+  },
+  {
+    "id": 196,
+    "name": "新加坡",
+    "eng": "Singapore"
+  },
+  {
+    "id": 198,
+    "name": "萨摩亚",
+    "eng": "Samoa"
+  },
+  {
+    "id": 199,
+    "name": "马耳他",
+    "eng": "Malta"
+  },
+  {
+    "id": 200,
+    "name": "列支敦士登",
+    "eng": "Liechtenstein"
+  },
+  {
+    "id": 201,
+    "name": "直布罗陀",
+    "eng": "Gibraltar"
+  },
+  {
+    "id": 203,
+    "name": "科索沃",
+    "eng": "Kosovo"
+  },
+  {
+    "id": 204,
+    "name": "纽埃",
+    "eng": "Niue"
+  }
+]
