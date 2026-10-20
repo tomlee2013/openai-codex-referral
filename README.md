@@ -6,8 +6,10 @@
   <img src="https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker" alt="Docker">
   <img src="https://img.shields.io/badge/OpenAI-Codex%20Desktop-412991.svg" alt="Codex">
   <img src="https://img.shields.io/badge/GPT-Referral%20Rewards-orange.svg" alt="GPT Referral">
+  <a href="https://cdxinvite.aicheap.pro" target="_blank"><img src="https://img.shields.io/badge/Live%20Demo-%E5%9C%A8%E7%BA%BF%E4%BD%93%E9%AA%8C%E7%AB%99%E7%82%B9-0ea5e9.svg?logo=googlechrome&logoColor=white" alt="Live Demo"></a>
 </p>
 
+> 🌐 **在线体验站点 (Live Demo)**: [https://cdxinvite.aicheap.pro](https://cdxinvite.aicheap.pro)  
 > 🏷️ **关键词 (Keywords)**: `GPT 邀请奖励` | `Codex 邀请奖励` | `OpenAI 邀请奖励` | `OpenAI 推荐朋友` | `Codex 邀请` | `GPT 邀请` | `ChatGPT Referral` | `OpenAI Credits` | `卡密分发核销` | `全自动接码核销`
 
 一套专为 **GPT / OpenAI Codex 推荐朋友邀请奖励（Credits / 额度返利）** 设计的高性能全自动化核销与卡密分发管理系统。
