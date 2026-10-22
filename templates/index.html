@@ -1014,8 +1014,8 @@
       to { opacity: 1; transform: translateX(0) scale(1); }
     }
 
-    /* 站点右上角 GitHub 开源链接胶囊 */
-    .github-corner-btn {
+        /* 站点右上角 购买卡密悬浮胶囊 */
+    .buy-corner-btn {
       position: fixed;
       top: 18px;
       right: 22px;
@@ -1023,41 +1023,41 @@
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      padding: 7px 15px;
+      padding: 8px 16px;
       border-radius: 999px;
-      background: rgba(13, 20, 38, 0.82);
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      color: #e0f2fe;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.32) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.55);
+      color: #fef08a;
       font-size: 13px;
-      font-weight: 650;
+      font-weight: 750;
       letter-spacing: 0.02em;
       text-decoration: none;
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 4px 18px rgba(2, 6, 16, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.04);
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.08);
       transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       cursor: pointer;
     }
-    .github-corner-btn:hover {
-      background: rgba(14, 165, 233, 0.24);
-      border-color: rgba(56, 189, 248, 0.7);
+    .buy-corner-btn:hover {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.38) 0%, rgba(217, 119, 6, 0.5) 100%);
+      border-color: #fde047;
       color: #ffffff;
-      box-shadow: 0 6px 24px rgba(14, 165, 233, 0.35), 0 0 14px rgba(56, 189, 248, 0.3);
+      box-shadow: 0 6px 25px rgba(245, 158, 11, 0.45), 0 0 16px rgba(245, 158, 11, 0.3);
       transform: translateY(-1.5px);
     }
-    .github-corner-btn svg {
+    .buy-corner-btn svg {
       flex-shrink: 0;
       transition: transform 0.2s ease;
     }
-    .github-corner-btn:hover svg.github-ext-arrow {
+    .buy-corner-btn:hover svg.buy-ext-arrow {
       transform: translate(1.5px, -1.5px);
     }
     @media (max-width: 640px) {
-      .github-corner-btn {
+      .buy-corner-btn {
         top: 12px;
         right: 12px;
-        padding: 5px 11px;
-        font-size: 11.5px;
+        padding: 6px 12px;
+        font-size: 12px;
         gap: 5px;
       }
     }
@@ -1065,13 +1065,15 @@
 </head>
 <body>
 
-  <!-- 站点右上角 GitHub 开源链接 -->
-  <a href="https://github.com/tomlee2013/openai-codex-referral" target="_blank" rel="noopener noreferrer" class="github-corner-btn" title="在 GitHub 查看开源代码与项目文档">
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+    <!-- 站点右上角 购买卡密直达链接 -->
+  <a href="https://www.16688.com.cn/goods/G84786577" target="_blank" rel="noopener noreferrer" class="buy-corner-btn" title="前往官方发卡平台购买卡密 (24H 自动秒发)">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="21" r="1"></circle>
+      <circle cx="20" cy="21" r="1"></circle>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
     </svg>
-    <span>GitHub 开源</span>
-    <svg class="github-ext-arrow" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    <span>🛒 购买卡密 (自动发货)</span>
+    <svg class="buy-ext-arrow" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
   </a>
 
 
@@ -1183,6 +1185,9 @@
                   style="flex:1;text-transform:uppercase;font-family:'JetBrains Mono',monospace;font-size:13.5px;"
                   onkeydown="if(event.key==='Enter')redeemCardKey()">
                 <button class="btn-submit" style="width:auto;padding:0 20px;height:42px;font-size:13.5px;margin-top:0;" onclick="redeemCardKey()">立即兑换</button>
+              </div>
+                            <div style="margin-top:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+                <span style="font-size:12px;color:#94a3b8;">还没有卡密？👉 <a href="https://www.16688.com.cn/goods/G84786577" target="_blank" rel="noopener noreferrer" style="color:#fbbf24;font-weight:700;text-decoration:none;border-bottom:1px dashed rgba(251,191,36,0.6);" title="点击跳转发卡平台购买卡密">点此前去购买卡密 (24H 自动秒发) &raquo;</a></span>
               </div>
               <div id="redeem-msg" style="margin-top:10px;font-size:12.5px;display:none;"></div>
             </div>
