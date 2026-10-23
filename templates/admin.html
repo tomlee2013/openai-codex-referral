@@ -855,7 +855,7 @@
       <input type="password" id="admin-pass-input" name="admin_secret_auth" class="input-text"
         autocomplete="new-password" autocorrect="off" autocapitalize="off" spellcheck="false"
         data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other"
-        style="width:100%;text-align:center;padding:12px;font-size:16px;margin-bottom:18px;" placeholder="默认密码: admin123456" onkeydown="if(event.key==='Enter')doAdminLogin()">
+        style="width:100%;text-align:center;padding:12px;font-size:16px;margin-bottom:18px;" placeholder="请输入管理员密码" onkeydown="if(event.key==='Enter')doAdminLogin()">
       <button class="btn btn-gold" style="width:100%;padding:12px;justify-content:center;font-size:14.5px;" onclick="doAdminLogin()">验证并登入</button>
       <div id="login-err" style="color:var(--danger);font-size:12.5px;margin-top:12px;display:none;"></div>
     </div>
@@ -1239,7 +1239,7 @@
               <div style="display:flex;flex-direction:column;gap:12px;">
                 <div>
                   <label style="font-size:12.5px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px;">管理员后台密码</label>
-                  <input type="text" id="cfg-admin-pass" class="input-text" style="width:100%;" placeholder="admin123456">
+                  <input type="text" id="cfg-admin-pass" class="input-text" style="width:100%;" placeholder="请输入新密码（留空则不修改）">
                 </div>
                 <div>
                   <label style="font-size:12.5px;font-weight:700;color:var(--text-muted);display:block;margin-bottom:5px;">管理员专属隐藏访问路径 (修改保存后重启生效)</label>
