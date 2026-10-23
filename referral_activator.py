@@ -216,6 +216,30 @@ def parse_args():
     return parser.parse_args()
 
 
+class TLSResponseWrapper:
+    """对齐 urllib HTTPResponse 接口的 TLS Client 响应包装器"""
+    def __init__(self, response):
+        self._resp = response
+        self.status = response.status_code
+        self.status_code = response.status_code
+        self.headers = getattr(response, "headers", {})
+        self._content = getattr(response, "content", b"") or b""
+        self._lines = None
+
+    def read(self, amt=None):
+        return self._content
+
+    def readline(self):
+        if self._lines is None:
+            self._lines = self._content.splitlines(keepends=True)
+        if self._lines:
+            return self._lines.pop(0)
+        return b""
+
+    def json(self):
+        return self._resp.json()
+
+
 class CodexReferralActivator:
     BASE_URL = "https://chatgpt.com/backend-api"
 
@@ -282,12 +306,21 @@ class CodexReferralActivator:
             self.codex_engine_headers["chatgpt-account-id"] = self.account_id
             self.webview_headers["chatgpt-account-id"] = self.account_id
 
-        # 启用网络 Opener
+        # 启用网络 Opener (urllib 备用)
         self.cookie_jar = http.cookiejar.CookieJar()
         handlers = [urllib.request.HTTPCookieProcessor(self.cookie_jar)]
         if self.proxy:
             handlers.append(urllib.request.ProxyHandler({"http": self.proxy, "https": self.proxy}))
         self.opener = urllib.request.build_opener(*handlers)
+
+        # 优先使用基于 Chrome 133 TLS 指纹的高性能会话，彻底免疫 Cloudflare WAF 对原生 Python urllib 的 EOF 阻断
+        try:
+            import tls_client
+            self.tls_session = tls_client.Session(client_identifier="chrome_133", random_tls_extension_order=True)
+            if self.proxy:
+                self.tls_session.proxies = {"http": self.proxy, "https": self.proxy}
+        except Exception:
+            self.tls_session = None
 
     def _detect_local_referrer_token(self) -> tuple[str, str]:
         """尝试从本机 .codex/auth.json 读取可能的邀请人 Token (便于对比核销状态)"""
@@ -345,18 +378,51 @@ class CodexReferralActivator:
         if headers:
             req_headers.update(headers)
 
-        req = urllib.request.Request(url, data=data, headers=req_headers, method=method)
-        try:
-            resp = self.opener.open(req, timeout=35)
-            return resp
-        except urllib.error.HTTPError as e:
-            if e.code not in silent_error_codes:
-                err_body = e.read().decode("utf-8", errors="replace")
-                print(f"❌ 请求失败: {method} {url} -> HTTP {e.code} | {err_body[:200]}")
-            return None
-        except Exception as e:
-            print(f"❌ 网络异常: {method} {url} -> {e}")
-            return None
+        for attempt in range(3):
+            try:
+                if getattr(self, "tls_session", None):
+                    resp = self.tls_session.execute_request(
+                        method=method,
+                        url=url,
+                        headers=req_headers,
+                        data=data,
+                        timeout_seconds=35
+                    )
+                    wrapper = TLSResponseWrapper(resp)
+                    if wrapper.status >= 400:
+                        if wrapper.status not in silent_error_codes:
+                            err_body = resp.text or ""
+                            print(f"❌ 请求失败: {method} {url} -> HTTP {wrapper.status} | {err_body[:200]}")
+                        if wrapper.status in (401, 403, 404):
+                            return None
+                    return wrapper
+                else:
+                    req = urllib.request.Request(url, data=data, headers=req_headers, method=method)
+                    resp = self.opener.open(req, timeout=35)
+                    return resp
+            except urllib.error.HTTPError as e:
+                if e.code not in silent_error_codes:
+                    err_body = e.read().decode("utf-8", errors="replace")
+                    print(f"❌ 请求失败: {method} {url} -> HTTP {e.code} | {err_body[:200]}")
+                return None
+            except Exception as e:
+                if attempt < 2:
+                    time.sleep(1.5)
+                    # 代理异常自动换 IP
+                    if self.proxy and "-sid-" in self.proxy:
+                        try:
+                            from oauth_client import refresh_dynamic_proxy
+                            self.proxy = refresh_dynamic_proxy(self.proxy)
+                            if getattr(self, "tls_session", None):
+                                self.tls_session.proxies = {"http": self.proxy, "https": self.proxy}
+                            handlers = [urllib.request.HTTPCookieProcessor(self.cookie_jar)]
+                            handlers.append(urllib.request.ProxyHandler({"http": self.proxy, "https": self.proxy}))
+                            self.opener = urllib.request.build_opener(*handlers)
+                        except Exception:
+                            pass
+                    continue
+                print(f"❌ 网络异常: {method} {url} -> {e}")
+                return None
 
     def step1_verify_identity_and_settings(self) -> dict:
         """步骤 1: 验证身份并同步桌面配置 (GET /backend-api/me & /settings/user & /wham/accounts/check)"""
@@ -1128,10 +1194,9 @@ class CodexReferralActivator:
                 ref_headers["chatgpt-account-id"] = self.referrer_acc_id
 
             track_url = f"{self.BASE_URL}/referrals/invite/tracking?period=this_month&program_id={self.program_id}&limit=100"
-            req = urllib.request.Request(track_url, headers=ref_headers, method="GET")
             try:
-                t_resp = self.opener.open(req, timeout=15)
-                if t_resp.status == 200:
+                t_resp = self._request("GET", track_url, headers=ref_headers, silent_error_codes=(401, 403, 404))
+                if t_resp and t_resp.status == 200:
                     t_data = json.loads(t_resp.read().decode("utf-8"))
                     items = t_data.get("items", [])
                     matched = False
