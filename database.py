@@ -12,7 +12,6 @@ from typing import Dict, List, Optional, Tuple
 
 BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "data" / "referral_system.db"
-DEFAULT_ACCOUNT_PASSWORD = os.getenv("DEFAULT_ACCOUNT_PASSWORD", "ChangeMePassword123!@")
 
 
 def get_connection() -> sqlite3.Connection:
@@ -27,11 +26,11 @@ def init_db():
         cursor = conn.cursor()
 
         # 邮箱库存表
-        cursor.execute(f"""
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS accounts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 email TEXT UNIQUE NOT NULL,
-                password TEXT DEFAULT '{DEFAULT_ACCOUNT_PASSWORD}',
+                password TEXT DEFAULT 'Openaipwd666!@',
                 worker_jwt TEXT DEFAULT '',
                 client_id TEXT DEFAULT NULL,
                 refresh_token TEXT DEFAULT NULL,
@@ -154,22 +153,22 @@ def init_db():
         except Exception:
             pass
 
-        # 写入默认设置 (优先读取环境变量，便于 Docker / 云原生部署)
+        # 写入默认设置
         defaults = {
-            "admin_password": os.getenv("ADMIN_PASSWORD", "admin123456"),
-            "admin_path": os.getenv("ADMIN_PATH", "admin-secret-dashboard"),
-            "worker_url": os.getenv("WORKER_URL", ""),
-            "worker_admin_auth": os.getenv("WORKER_ADMIN_AUTH", ""),
-            "worker_domain": os.getenv("WORKER_DOMAIN", ""),
-            "default_proxy": os.getenv("DEFAULT_PROXY", ""),
-            "sms_provider": os.getenv("SMS_PROVIDER", "5sim"),
-            "sms_api_key": os.getenv("SMS_API_KEY", ""),
-            "sms_country": os.getenv("SMS_COUNTRY", "vietnam"),
-            "hero_sms_api_key": os.getenv("HERO_SMS_API_KEY", ""),
-            "hero_sms_country": os.getenv("HERO_SMS_COUNTRY", "10"),
-            "sms_online_api_key": os.getenv("SMS_ONLINE_API_KEY", ""),
-            "sms_online_country": os.getenv("SMS_ONLINE_COUNTRY", "6"),
-            "sms_online_max_price": os.getenv("SMS_ONLINE_MAX_PRICE", "0.06"),
+            "admin_password": "admin123456",
+            "admin_path": "admin-secret-8f2c91b4a6d3e507",
+            "worker_url": "https://email.091619.xyz",
+            "worker_admin_auth": "Openaipwd666!@",
+            "worker_domain": "haojiangnet.com,091619.xyz",
+            "default_proxy": "http://192.168.31.32:15732",
+            "sms_provider": "5sim",
+            "sms_api_key": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE4MDc5NDY1NTcsImlhdCI6MTc3NjQxMDU1NywicmF5IjoiOWY0ODVlNDBjMDNiODU2ODJjOWNjZWFiNDA5ZWZjNWQiLCJzdWIiOjM5Nzk5OTR9.CnyfUzGKF43j3FkAUzv8HrFUHrIErc8JcAwa3et17fOFC8fjUS37N5wHcruc8rymZvFETzRBdaO3bG5YELG6Z8cKzcjlQLbUMMQZtszZklSjsod0HgF0yv4vZzXJ3qVYHCOOElv1v_OOxRK58icRDZL2CS-9kTpos19uL6GSv_YUwWfb31k9d907qD2HT1_2GqAuwf63p_-nYs-J7tx_g0GRcmkR9vwEEhzWK93adKZWMs-okPV6n17qRFTumIotbM2SQ8jom6AzAJ0gY-jbwzVjEv3cVsmjXs522TbR6YfQ3uDpz7YshEFuxTEbxGhZx3HqNTaH_sOTHpvcjYuudg",
+            "sms_country": "vietnam",
+            "hero_sms_api_key": "081f7fbeeec366AfAf12797A6cA6366f",
+            "hero_sms_country": "10",
+            "sms_online_api_key": "c3718a4660910a2e4cfec066a7dd91d3",
+            "sms_online_country": "6",
+            "sms_online_max_price": "0.06",
         }
         for k, v in defaults.items():
             cursor.execute("INSERT OR IGNORE INTO system_config (key, value) VALUES (?, ?)", (k, v))
@@ -206,7 +205,7 @@ def get_all_config() -> dict:
 
 def add_account(
     email: str,
-    password: str = None,
+    password: str = "Openaipwd666!@",
     worker_jwt: str = "",
     client_id: str = "",
     refresh_token: str = "",
@@ -215,7 +214,6 @@ def add_account(
     email = email.strip()
     if not email or "@" not in email:
         return False
-    password = (password or DEFAULT_ACCOUNT_PASSWORD).strip()
     worker_jwt = "".join(str(worker_jwt or "").split())
     refresh_token = "".join(str(refresh_token or "").split())
     client_id = str(client_id or "").strip()
@@ -287,7 +285,7 @@ def batch_import_accounts(text: str) -> dict:
 
                 if is_outlook:
                     mail_type = "outlook"
-                    password = parts[1] if len(parts) > 1 else DEFAULT_ACCOUNT_PASSWORD
+                    password = parts[1] if len(parts) > 1 else "Openaipwd666!@"
                     client_id = parts[2] if len(parts) > 2 and parts[2] else "9e5f94bc-e8a4-4e73-b8be-63364c29d753"
                     refresh_token = parts[3] if len(parts) > 3 else ""
 
@@ -360,9 +358,9 @@ def batch_import_accounts(text: str) -> dict:
                     cursor.execute("SELECT id FROM accounts WHERE email = ?", (email,))
                     exists = cursor.fetchone()
 
-                    cursor.execute(f"""
+                    cursor.execute("""
                         INSERT INTO accounts (email, password, worker_jwt, client_id, refresh_token, mail_type, status)
-                        VALUES (?, '{DEFAULT_ACCOUNT_PASSWORD}', ?, '', '', 'worker', 'available')
+                        VALUES (?, 'Openaipwd666!@', ?, '', '', 'worker', 'available')
                         ON CONFLICT(email) DO UPDATE SET
                             worker_jwt = excluded.worker_jwt,
                             mail_type = 'worker',
@@ -577,6 +575,14 @@ def list_accounts(status: str = None, search: str = None, page: int = 1, page_si
 def reset_account(account_id: int) -> bool:
     with get_connection() as conn:
         cursor = conn.cursor()
+        cursor.execute("SELECT email, assigned_card FROM accounts WHERE id = ?", (int(account_id),))
+        acc = cursor.fetchone()
+        if acc:
+            # 同步将关联的处于 bound 状态的卡密解绑，恢复为未使用 (unused)
+            if acc["assigned_card"]:
+                cursor.execute("UPDATE card_keys SET assigned_email = NULL, status = 'unused' WHERE card_key = ?", (acc["assigned_card"],))
+            if acc["email"]:
+                cursor.execute("UPDATE card_keys SET assigned_email = NULL, status = 'unused' WHERE assigned_email = ? AND status = 'bound'", (acc["email"],))
         cursor.execute("""
             UPDATE accounts SET
                 status = 'available',
@@ -584,7 +590,7 @@ def reset_account(account_id: int) -> bool:
                 error_message = NULL,
                 updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
-        """, (account_id,))
+        """, (int(account_id),))
         conn.commit()
         return cursor.rowcount > 0
 
@@ -658,6 +664,13 @@ def batch_reset_accounts(account_ids: List[int]) -> int:
     placeholders = ",".join("?" for _ in clean_ids)
     with get_connection() as conn:
         cursor = conn.cursor()
+        cursor.execute(f"SELECT email, assigned_card FROM accounts WHERE id IN ({placeholders})", clean_ids)
+        rows = cursor.fetchall()
+        for r in rows:
+            if r["assigned_card"]:
+                cursor.execute("UPDATE card_keys SET assigned_email = NULL, status = 'unused' WHERE card_key = ?", (r["assigned_card"],))
+            if r["email"]:
+                cursor.execute("UPDATE card_keys SET assigned_email = NULL, status = 'unused' WHERE assigned_email = ? AND status = 'bound'", (r["email"],))
         cursor.execute(f"""
             UPDATE accounts SET
                 status = 'available',
@@ -820,10 +833,15 @@ def redeem_card(card_key: str) -> Tuple[bool, Optional[str], str]:
         except Exception:
             pass
 
-        # 原子分配一个空闲可用邮箱
+        # 原子分配一个真正未被任何卡密占用的空闲可用邮箱
         cursor.execute("""
             SELECT * FROM accounts
             WHERE status = 'available'
+              AND (assigned_card IS NULL OR assigned_card = '')
+              AND email NOT IN (
+                  SELECT assigned_email FROM card_keys
+                  WHERE status = 'bound' AND assigned_email IS NOT NULL AND assigned_email != ''
+              )
             ORDER BY id ASC LIMIT 1
         """)
         account = cursor.fetchone()
@@ -1031,7 +1049,7 @@ def get_live_completed_stats() -> dict:
             # 脱敏处理: CDX-V60T-1XXD-FZJN -> CDX-V60T-****
             masked_card = ck[:8] + "-****" if len(ck) >= 8 else ck[:4] + "****"
 
-            # 邮箱脱敏示例: username@example.com -> use***@example.com
+            # 邮箱脱敏: dfgiuasljdgf@091619.xyz -> dfg***@091619.xyz
             if "@" in email:
                 u_part, d_part = email.split("@", 1)
                 masked_email = (u_part[:3] if len(u_part) >= 3 else u_part) + "***@" + d_part
@@ -1065,14 +1083,14 @@ def get_live_completed_stats() -> dict:
         # 若真实记录不足 8 条，融合近期逼真种子轮播数据，确保跑马灯丰富流畅
         if len(recent_items) < 8:
             seed_templates = [
-                {"card_prefix": "CDX-K82W", "email": "kpx***@example.com", "min_offset": 3},
-                {"card_prefix": "CDX-9MA2", "email": "ytr***@example.com", "min_offset": 8},
-                {"card_prefix": "CDX-37FD", "email": "wlo***@example.com", "min_offset": 14},
-                {"card_prefix": "CDX-89QL", "email": "asq***@example.com", "min_offset": 22},
-                {"card_prefix": "CDX-52NB", "email": "vbn***@example.com", "min_offset": 35},
-                {"card_prefix": "CDX-11XY", "email": "mko***@example.com", "min_offset": 49},
-                {"card_prefix": "CDX-70RA", "email": "plk***@example.com", "min_offset": 68},
-                {"card_prefix": "CDX-46ZT", "email": "ujm***@example.com", "min_offset": 85},
+                {"card_prefix": "CDX-K82W", "email": "kpx***@091619.xyz", "min_offset": 3},
+                {"card_prefix": "CDX-9MA2", "email": "ytr***@091619.xyz", "min_offset": 8},
+                {"card_prefix": "CDX-37FD", "email": "wlo***@091619.xyz", "min_offset": 14},
+                {"card_prefix": "CDX-89QL", "email": "asq***@091619.xyz", "min_offset": 22},
+                {"card_prefix": "CDX-52NB", "email": "vbn***@091619.xyz", "min_offset": 35},
+                {"card_prefix": "CDX-11XY", "email": "mko***@091619.xyz", "min_offset": 49},
+                {"card_prefix": "CDX-70RA", "email": "plk***@091619.xyz", "min_offset": 68},
+                {"card_prefix": "CDX-46ZT", "email": "ujm***@091619.xyz", "min_offset": 85},
             ]
             for s in seed_templates:
                 if len(recent_items) >= 8:
@@ -1504,13 +1522,13 @@ def import_worker_accounts_to_inventory(worker_ids: Optional[List[int]] = None, 
             chk_at = r["checked_at"]
             msg = r["check_message"] or ""
 
-            cursor.execute(f"""
+            cursor.execute("""
                 INSERT INTO accounts (
                     email, password, worker_jwt, client_id, refresh_token, mail_type, status,
                     check_status, has_phone, phone_number, checked_at, error_message
                 )
                 VALUES (
-                    ?, '{DEFAULT_ACCOUNT_PASSWORD}', ?, '', '', 'worker', 'available',
+                    ?, 'Openaipwd666!@', ?, '', '', 'worker', 'available',
                     ?, ?, ?, ?, ?
                 )
                 ON CONFLICT(email) DO UPDATE SET
@@ -1568,13 +1586,13 @@ def import_worker_phone_verified_xyz_to_inventory() -> dict:
             chk_at = r["checked_at"]
             msg = r["check_message"] or "已接手机码"
 
-            cursor.execute(f"""
+            cursor.execute("""
                 INSERT INTO accounts (
                     email, password, worker_jwt, client_id, refresh_token, mail_type, status,
                     check_status, has_phone, phone_number, checked_at, error_message
                 )
                 VALUES (
-                    ?, '{DEFAULT_ACCOUNT_PASSWORD}', ?, '', '', 'worker', 'available',
+                    ?, 'Openaipwd666!@', ?, '', '', 'worker', 'available',
                     ?, ?, ?, ?, ?
                 )
                 ON CONFLICT(email) DO UPDATE SET
@@ -1706,7 +1724,7 @@ def get_all_worker_accounts_text(
             if format_type == "email_jwt":
                 lines.append(f"{email}----{jwt}")
             elif format_type == "full":
-                lines.append(f"{email}----{DEFAULT_ACCOUNT_PASSWORD}----uploaded----{jwt}")
+                lines.append(f"{email}----Openaipwd666!@----uploaded----{jwt}")
             elif format_type == "email_only":
                 lines.append(email)
             else:

@@ -39,11 +39,6 @@ TEMPLATES_DIR = BASE_DIR / "templates"
 ACTIVATOR_SCRIPT = BASE_DIR / "referral_activator.py"
 CODEX_BIN_DEFAULT = BASE_DIR / "codex"
 
-DEFAULT_ACCOUNT_PASSWORD = os.getenv("DEFAULT_ACCOUNT_PASSWORD", "ChangeMePassword123!@")
-DEFAULT_WORKER_URL = os.getenv("WORKER_URL", "")
-DEFAULT_WORKER_AUTH = os.getenv("WORKER_ADMIN_AUTH", "")
-DEFAULT_WORKER_DOMAIN = os.getenv("WORKER_DOMAIN", "")
-
 # 初始化本地 SQLite 数据库
 try:
     database.init_db()
@@ -71,7 +66,9 @@ def get_default_proxy() -> str:
             return refresh_dynamic_proxy(cfg)
     except Exception:
         pass
-    return os.getenv("DEFAULT_PROXY", "")
+    if is_wsl():
+        return "http://192.168.31.32:15732"
+    return "http://127.0.0.1:15732"
 
 
 def decode_jwt_safe(token: str) -> dict:
@@ -256,14 +253,14 @@ class TaskManager:
             task.add_log(f"目标被邀请邮箱: {email} | 客户端 ID: app_EMoamEEZ73f0CkXaXp7hrann", "info")
 
             acc = database.get_account_by_email(email)
-            acc_pwd = (acc.get("password") if acc else None) or DEFAULT_ACCOUNT_PASSWORD
+            acc_pwd = (acc.get("password") if acc else None) or "Openaipwd666!@"
             acc_jwt = (acc.get("worker_jwt") if acc else None) or ""
             acc_cid = (acc.get("client_id") if acc else None) or ""
             acc_rt = (acc.get("refresh_token") if acc else None) or ""
             acc_type = (acc.get("mail_type") if acc else None) or "worker"
 
-            worker_url = database.get_config("worker_url", DEFAULT_WORKER_URL)
-            worker_auth = database.get_config("worker_admin_auth", DEFAULT_WORKER_AUTH)
+            worker_url = database.get_config("worker_url", "https://email.091619.xyz")
+            worker_auth = database.get_config("worker_admin_auth", "Openaipwd666!@")
             oauth_proxy = proxy or database.get_config("default_proxy", "")
 
             engine = DesktopOAuthEngine(proxy=oauth_proxy, worker_url=worker_url, worker_admin_auth=worker_auth)
@@ -290,8 +287,9 @@ class TaskManager:
                 if err_type in ("account_deactivated", "user_blocked") or "deactivated" in str(err_msg).lower():
                     database.update_account_status(email, "banned", error_message=f"账号已被 OpenAI 停用封禁 ({err_msg})")
                 else:
-                    # 接码无号、短信超时、网络波动等临时问题，保留为 available，绝不误标为停用！
-                    database.update_account_status(email, "available", error_message=f"授权未完成: {err_msg}")
+                    # 卡密模式下保留 allocated 状态，供当前卡密独占重试，杜绝被其他卡密并发或再次抢占！
+                    target_status = "allocated" if mode == "card" else "available"
+                    database.update_account_status(email, target_status, error_message=f"授权未完成: {err_msg}")
 
                 task.finish("failed", {"error": err_type, "message": err_msg})
                 return
@@ -453,12 +451,12 @@ task_manager = TaskManager()
 # ==================== 全自动批量注册任务管理 ====================
 
 class AutoRegisterTask:
-    def __init__(self, task_id: str, count: int, domain: str, proxy: str, password: str = None):
+    def __init__(self, task_id: str, count: int, domain: str, proxy: str, password: str = "Openaipwd666!@"):
         self.task_id = task_id
         self.count = count
         self.domain = domain
         self.proxy = proxy
-        self.password = password or DEFAULT_ACCOUNT_PASSWORD
+        self.password = password
         self.status = "queued"  # queued, running, completed, stopped, failed
         self.created_at = time.time()
         self.started_at: Optional[float] = None
@@ -535,9 +533,9 @@ class AutoRegisterTaskManager:
     def __init__(self):
         self.tasks: Dict[str, AutoRegisterTask] = {}
 
-    def create_task(self, count: int, domain: str, proxy: str, password: str = None) -> AutoRegisterTask:
+    def create_task(self, count: int, domain: str, proxy: str, password: str = "Openaipwd666!@") -> AutoRegisterTask:
         task_id = f"reg_{uuid.uuid4().hex[:10]}"
-        task = AutoRegisterTask(task_id, count, domain, proxy, password or DEFAULT_ACCOUNT_PASSWORD)
+        task = AutoRegisterTask(task_id, count, domain, proxy, password)
         self.tasks[task_id] = task
         return task
 
@@ -568,8 +566,8 @@ async def run_autoregister_task(task: AutoRegisterTask):
         task.add_log(f"🌐 注册出口代理: {task.proxy}", "info")
 
     cfg = database.get_all_config()
-    worker_url = cfg.get("worker_url", DEFAULT_WORKER_URL)
-    worker_auth = cfg.get("worker_admin_auth", DEFAULT_WORKER_AUTH)
+    worker_url = cfg.get("worker_url", "https://email.091619.xyz")
+    worker_auth = cfg.get("worker_admin_auth", "Openaipwd666!@")
 
     for i in range(task.count):
         if task.stopped:
@@ -670,14 +668,12 @@ class WorkerAutoCheckTask:
         max_delay: int = 40,
         scope: str = "pending",
         proxy: str = "",
-        password: str = None
+        password: str = "Openaipwd666!@"
     ):
         self.task_id = task_id
         self.min_delay = max(int(min_delay), 15)  # 最低保底 15 秒防风控
         self.max_delay = max(int(max_delay), self.min_delay + 5)
         self.scope = scope
-        self.proxy = proxy
-        self.password = password or DEFAULT_ACCOUNT_PASSWORD
         self.proxy = proxy
         self.password = password
         self.status = "queued"  # queued, running, paused, completed, stopped, failed
@@ -752,9 +748,9 @@ class WorkerAutoCheckManager:
     def __init__(self):
         self.tasks: Dict[str, WorkerAutoCheckTask] = {}
 
-    def create_task(self, min_delay: int = 25, max_delay: int = 40, scope: str = "pending", proxy: str = "", password: str = None) -> WorkerAutoCheckTask:
+    def create_task(self, min_delay: int = 25, max_delay: int = 40, scope: str = "pending", proxy: str = "", password: str = "Openaipwd666!@") -> WorkerAutoCheckTask:
         task_id = f"chk_{uuid.uuid4().hex[:10]}"
-        task = WorkerAutoCheckTask(task_id, min_delay=min_delay, max_delay=max_delay, scope=scope, proxy=proxy, password=password or DEFAULT_ACCOUNT_PASSWORD)
+        task = WorkerAutoCheckTask(task_id, min_delay=min_delay, max_delay=max_delay, scope=scope, proxy=proxy, password=password)
         self.tasks[task_id] = task
         return task
 
@@ -1377,9 +1373,9 @@ async def api_admin_accounts_autoregister(request):
     except Exception:
         body = {}
     count = min(max(int(body.get("count", 1)), 1), 20)
-    domain = body.get("domain", "").strip() or DEFAULT_WORKER_DOMAIN
+    domain = body.get("domain", "").strip() or "haojiangnet.com"
     proxy = body.get("proxy", "").strip() or get_default_proxy()
-    password = body.get("password", "").strip() or DEFAULT_ACCOUNT_PASSWORD
+    password = body.get("password", "").strip() or "Openaipwd666!@"
 
     # 检查是否已有正在运行的注册任务
     active_task = auto_reg_task_manager.get_active_task()
@@ -1590,7 +1586,7 @@ async def api_admin_account_check(request):
     res = await asyncio.to_thread(
         check_worker_account_phone_and_alive,
         email=acc["email"],
-        password=acc.get("password") or DEFAULT_ACCOUNT_PASSWORD,
+        password=acc.get("password") or "Openaipwd666!@",
         proxy=proxy,
         worker_jwt="".join(str(acc.get("worker_jwt") or "").split()),
         client_id=str(acc.get("client_id") or "").strip(),
@@ -1663,7 +1659,7 @@ async def api_admin_accounts_batch_check(request):
 
             r = check_worker_account_phone_and_alive(
                 email=acc["email"],
-                password=acc.get("password") or DEFAULT_ACCOUNT_PASSWORD,
+                password=acc.get("password") or "Openaipwd666!@",
                 proxy=proxy,
                 worker_jwt="".join(str(acc.get("worker_jwt") or "").split()),
                 client_id=str(acc.get("client_id") or "").strip(),
@@ -1873,8 +1869,8 @@ async def api_admin_sms_countries(request):
 
 def do_sync_worker_accounts(force_jwt_refresh: bool = False) -> dict:
     cfg = database.get_all_config()
-    worker_url = cfg.get("worker_url", DEFAULT_WORKER_URL).rstrip("/")
-    worker_auth = cfg.get("worker_admin_auth", DEFAULT_WORKER_AUTH).strip()
+    worker_url = cfg.get("worker_url", "https://email.091619.xyz").rstrip("/")
+    worker_auth = cfg.get("worker_admin_auth", "Openaipwd666!@").strip()
 
     if not worker_url or not worker_auth:
         raise ValueError("系统未配置 worker_url 或 worker_admin_auth")
@@ -2070,7 +2066,7 @@ async def api_admin_worker_account_mails(request):
         return JSONResponse({"success": False, "error": "该邮箱无有效 JWT 凭证"}, status_code=400)
 
     cfg = database.get_all_config()
-    worker_url = cfg.get("worker_url", DEFAULT_WORKER_URL).rstrip("/")
+    worker_url = cfg.get("worker_url", "https://email.091619.xyz").rstrip("/")
 
     def _fetch_mails():
         try:
@@ -2134,7 +2130,7 @@ async def api_admin_worker_account_check(request):
         body = {}
 
     proxy = body.get("proxy", "").strip() or database.get_config("default_proxy")
-    password = body.get("password", "").strip() or DEFAULT_ACCOUNT_PASSWORD
+    password = body.get("password", "").strip() or "Openaipwd666!@"
 
     from oauth_client import check_worker_account_phone_and_alive
     res = await asyncio.to_thread(
@@ -2177,7 +2173,7 @@ async def api_admin_worker_accounts_batch_check(request):
         return JSONResponse({"error": "请选择需要检测的 Worker 邮箱"}, status_code=400)
 
     proxy = body.get("proxy", "").strip() or database.get_config("default_proxy")
-    password = body.get("password", "").strip() or DEFAULT_ACCOUNT_PASSWORD
+    password = body.get("password", "").strip() or "Openaipwd666!@"
 
     from oauth_client import check_worker_account_phone_and_alive
 
@@ -2267,7 +2263,7 @@ async def api_admin_worker_autocheck_start(request):
     max_delay = max(int(body.get("max_delay", 40)), min_delay + 5)
     scope = body.get("scope", "pending").strip()  # pending, unregistered, all
     proxy = body.get("proxy", "").strip() or get_default_proxy()
-    password = body.get("password", "").strip() or DEFAULT_ACCOUNT_PASSWORD
+    password = body.get("password", "").strip() or "Openaipwd666!@"
 
     active_task = worker_auto_check_manager.get_active_task()
     if active_task:
@@ -2355,7 +2351,7 @@ async def api_admin_worker_autocheck_status(request):
     })
 
 
-admin_secret_path = database.get_config("admin_path", os.getenv("ADMIN_PATH", "admin-secret-dashboard")).strip("/")
+admin_secret_path = database.get_config("admin_path", "admin-secret-8f2c91b4a6d3e507").strip("/")
 
 routes = [
     Route("/", index_view, methods=["GET"]),
