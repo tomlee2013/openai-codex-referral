@@ -1244,6 +1244,19 @@ async def api_card_activate(request):
     if not card_key or not email:
         return JSONResponse({"error": "缺少卡密或被邀请邮箱参数"}, status_code=400)
 
+    # 防连点与并发防踩：检查是否已有同一卡密或邮箱正在执行中的任务，若有则直接复用
+    for t in list(task_manager.tasks.values()):
+        if t.status in ("pending", "running"):
+            p = t.params or {}
+            if p.get("card_key") == card_key or (email and p.get("email") == email):
+                return JSONResponse({
+                    "task_id": t.task_id,
+                    "status": t.status,
+                    "card_key": card_key,
+                    "email": email,
+                    "reused": True
+                })
+
     body["mode"] = "card"
     body["proxy"] = proxy
     task = task_manager.create_task(body)

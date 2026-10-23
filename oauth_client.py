@@ -1078,7 +1078,11 @@ class DesktopOAuthEngine:
                 last_id = get_latest_worker_mail_id(self.worker_url, worker_jwt)
 
             sent = False
-            if is_passwordless_switch:
+            if page_type == "email_otp_verification" or "email-verification" in (continue_url or "").lower():
+                # OpenAI 官方服务端在 authorize/continue 响应为 email_otp_verification 时，已自动下发第一封验证邮件并建立校验挑战
+                # 严禁再次请求页面或调用 send/resend，否则会立即冲掉当前挑战会话导致 "Your sign-in session is no longer valid"
+                sent = True
+            elif is_passwordless_switch:
                 pwd_page_url = continue_url or "https://auth.openai.com/log-in/password"
                 try:
                     session.get(
@@ -1327,10 +1331,10 @@ class DesktopOAuthEngine:
                     if not is_outlook and worker_jwt:
                         last_id = get_latest_worker_mail_id(self.worker_url, worker_jwt)
 
-                    # 访问 OTP 页面并触发发送/重发验证码
+                    # 仅在尚未触发免密下发时，才尝试访问 OTP 页面或重发
                     try:
-                        session.get(continue_url or "https://auth.openai.com/email-verification", headers={"referer": password_url}, allow_redirects=True)
                         if not fallback_sent:
+                            session.get(continue_url or "https://auth.openai.com/email-verification", headers={"referer": password_url}, allow_redirects=True)
                             session.post(
                                 "https://auth.openai.com/api/accounts/email-otp/resend",
                                 json={},
