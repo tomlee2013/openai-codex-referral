@@ -1768,7 +1768,12 @@
 
   <!-- 前端核心交互逻辑 -->
   <script>
-    // ==================== 官方主站“AI比价雷达”浮标关闭与记忆逻辑 ====================
+    // ==================== 官方主站“AI比价雷达”浮标交互（每次刷新必然展示，支持临时关闭） ====================
+    try {
+      localStorage.removeItem('hide_radar_float_tag');
+      sessionStorage.removeItem('hide_radar_float_tag');
+    } catch (err) {}
+
     function closeRadarTag(e) {
       if (e) {
         e.preventDefault();
@@ -1783,19 +1788,7 @@
           tag.style.display = 'none';
         }, 220);
       }
-      try {
-        localStorage.setItem('hide_radar_float_tag', '1');
-      } catch (err) {}
     }
-
-    (function initRadarTag() {
-      try {
-        if (localStorage.getItem('hide_radar_float_tag') === '1') {
-          var tag = document.getElementById('radar-float-tag');
-          if (tag) tag.style.display = 'none';
-        }
-      } catch (err) {}
-    })();
 
     // ==================== 全局禁用浏览器表单自动填充与历史提示下拉框 ====================
     (function initAutofillPrevention() {
